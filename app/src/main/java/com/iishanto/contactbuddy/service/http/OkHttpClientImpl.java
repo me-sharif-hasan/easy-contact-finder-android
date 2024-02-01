@@ -1,5 +1,10 @@
 package com.iishanto.contactbuddy.service.http;
 
+import android.util.Log;
+
+import androidx.annotation.NonNull;
+
+import com.iishanto.contactbuddy.ConfigurationSingleton;
 import com.iishanto.contactbuddy.events.HttpEvent;
 import com.iishanto.contactbuddy.model.Model;
 
@@ -7,6 +12,8 @@ import java.io.IOException;
 
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.HttpUrl;
+import okhttp3.Interceptor;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -14,20 +21,34 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class OkHttpClientImpl extends HttpClient{
+    public static final String TAG="OK_HTTP_CLIENT_IMPL";
     okhttp3.OkHttpClient okHttpClient;
+    private final HttpUrl baseUrl;
     public OkHttpClientImpl(){
+        baseUrl=null;
+        init();
+    }
+    public OkHttpClientImpl(String baseUrl){
+        this.baseUrl=HttpUrl.get(baseUrl);
+        Log.i(TAG, "OkHttpClientImpl: "+this.baseUrl.toString());
+        init();
+    }
+    private void init(){
         this.okHttpClient= new OkHttpClient.Builder().build();
     }
     @Override
     public void get(String url, HttpEvent httpEvent) {
-        okHttpClient.newCall(getOkHttpGetRequest(url)).enqueue(new Callback() {
+        HttpUrl newUrl=baseUrl.resolve(url);
+        assert newUrl != null;
+        okHttpClient.newCall(getOkHttpGetRequest(newUrl.toString())).enqueue(new Callback() {
             @Override
-            public void onFailure(Call call, IOException e) {
-                httpEvent.failure(e.getLocalizedMessage());
+            public void onFailure(@NonNull Call call, IOException e) {
+                httpEvent.failure(e);
             }
 
             @Override
-            public void onResponse(Call call, Response response) throws IOException {
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                assert response.body() != null;
                 String data=response.body().string();
                 httpEvent.success(data);
             }
@@ -36,14 +57,18 @@ public class OkHttpClientImpl extends HttpClient{
 
     @Override
     public void post(String url,Model model,HttpEvent httpEvent) {
-        okHttpClient.newCall(getOkHttpPostRequest(url,model)).enqueue(new Callback() {
+        HttpUrl newUrl=baseUrl.resolve(url);
+        assert newUrl != null;
+        okHttpClient.newCall(getOkHttpPostRequest(newUrl.toString(),model)).enqueue(new Callback() {
             @Override
-            public void onFailure(Call call, IOException e) {
-                httpEvent.failure(e.getLocalizedMessage());
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                httpEvent.failure(e);
             }
 
             @Override
-            public void onResponse(Call call, Response response) throws IOException {
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                Log.i(TAG, "onResponse: Got response "+response.message());
+                assert response.body() != null;
                 httpEvent.success(response.body().string());
             }
         });

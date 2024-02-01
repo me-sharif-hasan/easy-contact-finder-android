@@ -1,5 +1,7 @@
 package com.iishanto.contactbuddy.service.backendAuthService.credential;
 
-public interface BackendCredential {
-    public String getType();
+import com.iishanto.contactbuddy.model.Model;
+
+public abstract class BackendCredential extends Model{
+    public abstract String getType();
 }

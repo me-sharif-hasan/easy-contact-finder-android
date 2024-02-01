@@ -13,6 +13,9 @@ import androidx.credentials.exceptions.GetCredentialException;
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption;
 import com.iishanto.contactbuddy.R;
 import com.iishanto.contactbuddy.events.UserAuthEvents;
+import com.iishanto.contactbuddy.model.User;
+import com.iishanto.contactbuddy.service.backendAuthService.BasicAuthenticator;
+import com.iishanto.contactbuddy.service.backendAuthService.credential.GoogleAuthCredential;
 
 import java.util.concurrent.Executor;
 
@@ -51,11 +54,32 @@ public class GoogleAuthenticationService{
 
                 Log.i(TAG, "onResult: "+email+" "+name+" "+idToken);
 
+                BasicAuthenticator basicAuthenticator=new BasicAuthenticator();
+                GoogleAuthCredential googleAuthCredential=new GoogleAuthCredential();
+                googleAuthCredential.setEmail(email);
+                googleAuthCredential.setToken(idToken);
+                basicAuthenticator.auth(googleAuthCredential, new UserAuthEvents() {
+                    @Override
+                    public void onSuccess(User user) {
+                        Log.i(TAG, "onSuccess: Google auth success");
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+                        Log.w(TAG, "onError: Google Auth err from backend:"+e.getLocalizedMessage() );
+                    }
+
+                    @Override
+                    public void onLoading() {
+                        Log.i(TAG, "onLoading: Google auth is sending data to backend");
+                    }
+                });
+
             }
 
             @Override
             public void onError(@NonNull GetCredentialException e) {
-                Log.i(TAG, "onError: "+e.getLocalizedMessage());
+                Log.i(TAG, "onError: google failure: "+e.getLocalizedMessage());
 //                userAuthEvents.onError("গুগল ব্যবহার করা যায়নি।");
             }
         });
