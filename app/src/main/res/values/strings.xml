@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Contact Buddy</string>
+    <string name="background_fluid">background fluid</string>
+    <string name="login_cred_email_phone">Enter your email or phone</string>
+    <string name="enter_your_password">Enter your password</string>
+    <string name="enter_button_text">Enter</string>
+    <string name="login_heading">Get Started</string>
+    <string name="google_login_text">Google Login</string>
+    <string name="web_client_id">951104676958-rccvh2e68eqdr8nmhm56aj0r8e4t1quo.apps.googleusercontent.com</string>
+</resources>
