@@ -1,10 +1,19 @@
 <resources>
     <string name="app_name">Contact Buddy</string>
     <string name="background_fluid">background fluid</string>
-    <string name="login_cred_email_phone">Enter your email or phone</string>
+    <string name="login_cred_email_phone">Enter your email</string>
     <string name="enter_your_password">Enter your password</string>
     <string name="enter_button_text">Enter</string>
     <string name="login_heading">Get Started</string>
     <string name="google_login_text">Google Login</string>
     <string name="web_client_id">951104676958-rccvh2e68eqdr8nmhm56aj0r8e4t1quo.apps.googleusercontent.com</string>
+    <string name="register_with_google">Register with google</string>
+    <string name="register_new_account">Register new account</string>
+    <string name="login_error_text">Login failure. Check email/ password/ network</string>
+    <string name="camera_icon_description">Camera icon</string>
+    <string name="face_verification_setup_text">Face verification required</string>
+    <string name="setup_take_selfie_button_text">Verify</string>
+    <string name="no_face_found_please_retry">No face found. Please retry.</string>
+    <string name="phone_verification_field_text">Enter verification code</string>
+    <string name="phone_number_field_text">Your phone number</string>
 </resources>

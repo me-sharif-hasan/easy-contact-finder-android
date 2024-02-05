@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.authentication.LoginActivity">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:contentDescription="@string/background_fluid"
+        android:src="@mipmap/user_setup_bg" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/setup_main_section"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="0dp"
+        android:layout_marginEnd="0dp"
+        android:background="@mipmap/setup_bg"
+        android:paddingVertical="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/pacifico_regular"
+            android:text="@string/face_verification_setup_text"
+            android:textColor="#606060"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toTopOf="@+id/relativeLayout"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.507"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.662" />
+
+        <TextView
+            android:id="@+id/setup_no_face_found_error"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:handwritingBoundsOffsetRight="5dp"
+            android:text="@string/no_face_found_please_retry"
+            android:visibility="invisible"
+            android:textColor="#F44336"
+            app:layout_constraintBottom_toTopOf="@+id/materialCardView"
+            app:layout_constraintEnd_toEndOf="@+id/textView2"
+            app:layout_constraintHorizontal_bias="0.473"
+            app:layout_constraintStart_toStartOf="@+id/textView2"
+            app:layout_constraintTop_toBottomOf="@+id/textView2"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/materialCardView"
+            android:layout_width="207dp"
+            android:layout_height="207dp"
+            android:background="#00000000"
+            app:cardCornerRadius="100dp"
+            app:layout_constraintBottom_toBottomOf="@+id/relativeLayout"
+            app:layout_constraintEnd_toEndOf="@+id/relativeLayout"
+            app:layout_constraintStart_toStartOf="@+id/relativeLayout"
+            app:layout_constraintTop_toTopOf="@+id/relativeLayout"
+            app:strokeColor="@color/white"
+            app:strokeWidth="2dp">
+
+            <androidx.camera.view.PreviewView
+                android:id="@+id/setup_camera_preview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_constraintEnd_toEndOf="@+id/relativeLayout"
+                app:layout_constraintStart_toStartOf="@+id/relativeLayout" />
+        </com.google.android.material.card.MaterialCardView>
+
+        <RelativeLayout
+            android:id="@+id/relativeLayout"
+            android:layout_width="210dp"
+            android:layout_height="210dp"
+            android:layout_marginTop="120dp"
+            android:background="@mipmap/camera_bg"
+            app:layout_constraintEnd_toEndOf="@+id/textView2"
+            app:layout_constraintHorizontal_bias="0.483"
+            app:layout_constraintStart_toStartOf="@+id/textView2"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:layout_width="55dp"
+                android:layout_height="46dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginStart="47dp"
+                android:layout_marginTop="60dp"
+                android:layout_marginEnd="47dp"
+                android:layout_marginBottom="60dp"
+                android:contentDescription="@string/camera_icon_description"
+                android:src="@mipmap/camera" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/phone_verification_fields"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toTopOf="@+id/setup_take_picture_button"
+            app:layout_constraintEnd_toEndOf="@+id/setup_take_picture_button"
+            app:layout_constraintStart_toStartOf="@+id/setup_take_picture_button"
+            app:layout_constraintTop_toBottomOf="@+id/materialCardView">
+
+            <EditText
+                android:id="@+id/setup_phone_number_field"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/phone_number_field_text"
+                app:layout_constraintBottom_toTopOf="@+id/setup_take_picture_button" />
+
+            <EditText
+                android:id="@+id/setup_verification_code"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:enabled="false"
+                android:hint="@string/phone_verification_field_text" />
+        </LinearLayout>
+
+        <com.github.leandroborgesferreira.loadingbutton.customViews.CircularProgressButton
+            android:id="@+id/setup_take_picture_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/setup_take_selfie_button_text"
+            android:textColor="#606060"
+            android:background="@drawable/google_login_button_bg"
+            android:padding="10dp"
+            android:fontFamily="@font/pacifico_regular"
+            android:textSize="17sp"
+            android:textAllCaps="false"
+            app:initialCornerAngle="100dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/relativeLayout"
+            app:layout_constraintHorizontal_bias="0.511"
+            app:layout_constraintStart_toStartOf="@+id/relativeLayout"
+            app:layout_constraintTop_toBottomOf="@+id/relativeLayout"
+            app:layout_constraintVertical_bias="0.591" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</RelativeLayout>

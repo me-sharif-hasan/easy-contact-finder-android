@@ -1,4 +1,4 @@
-package com.iishanto.contactbuddy.service.socialLoginService;
+package com.iishanto.contactbuddy.activities.authentication;
 
 import android.util.Log;
 
@@ -21,11 +21,11 @@ import java.util.concurrent.Executor;
 
 import okhttp3.OkHttpClient;
 
-public class GoogleAuthenticationService{
+public class GoogleAuthentication {
     public static final String TAG="GOOGLE_AUTHENTICATION_SERVICE";
     AppCompatActivity appCompatActivity;
     private OkHttpClient okHttpClient;
-    public GoogleAuthenticationService(AppCompatActivity appCompatActivity){
+    public GoogleAuthentication(AppCompatActivity appCompatActivity){
 //        okHttpClient=Endpoints.getOkHttpClient(appCompatActivity);
         this.appCompatActivity=appCompatActivity;
     }
@@ -52,35 +52,20 @@ public class GoogleAuthenticationService{
                 String name = getCredentialResponse.getCredential().getData().getString("com.google.android.libraries.identity.googleid.BUNDLE_KEY_DISPLAY_NAME");
                 String idToken = getCredentialResponse.getCredential().getData().getString("com.google.android.libraries.identity.googleid.BUNDLE_KEY_ID_TOKEN");
 
-                Log.i(TAG, "onResult: "+email+" "+name+" "+idToken);
+                Log.i(TAG, "onResult: "+email+" "+name+" "+getCredentialResponse.getCredential().getData());
 
                 BasicAuthenticator basicAuthenticator=new BasicAuthenticator();
                 GoogleAuthCredential googleAuthCredential=new GoogleAuthCredential();
                 googleAuthCredential.setEmail(email);
                 googleAuthCredential.setToken(idToken);
-                basicAuthenticator.auth(googleAuthCredential, new UserAuthEvents() {
-                    @Override
-                    public void onSuccess(User user) {
-                        Log.i(TAG, "onSuccess: Google auth success");
-                    }
-
-                    @Override
-                    public void onError(Exception e) {
-                        Log.w(TAG, "onError: Google Auth err from backend:"+e.getLocalizedMessage() );
-                    }
-
-                    @Override
-                    public void onLoading() {
-                        Log.i(TAG, "onLoading: Google auth is sending data to backend");
-                    }
-                });
+                basicAuthenticator.auth(googleAuthCredential, userAuthEvents);
 
             }
 
             @Override
             public void onError(@NonNull GetCredentialException e) {
                 Log.i(TAG, "onError: google failure: "+e.getLocalizedMessage());
-//                userAuthEvents.onError("গুগল ব্যবহার করা যায়নি।");
+                userAuthEvents.onError(e);
             }
         });
     }

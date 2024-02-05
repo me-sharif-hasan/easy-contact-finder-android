@@ -1,14 +1,14 @@
 package com.iishanto.contactbuddy.service.backendAuthService.credential;
 
-import com.iishanto.contactbuddy.ConfigurationSingleton;
-import com.iishanto.contactbuddy.model.Model;
+import com.iishanto.contactbuddy.UtilityAndConstantsProvider;
 
 public class GoogleAuthCredential extends BackendCredential{
     String email;
     String token;
+
     @Override
     public String getType() {
-        return ConfigurationSingleton.googleAuthType;
+        return UtilityAndConstantsProvider.googleAuthType;
     }
 
     public String getEmail() {
