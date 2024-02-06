@@ -16,4 +16,5 @@
     <string name="no_face_found_please_retry">No face found. Please retry.</string>
     <string name="phone_verification_field_text">Enter verification code</string>
     <string name="phone_number_field_text">Your phone number</string>
+    <string name="reg_page_bg_description">A man stading with a surfer board.</string>
 </resources>

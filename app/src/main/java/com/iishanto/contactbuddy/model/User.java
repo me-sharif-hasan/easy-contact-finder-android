@@ -11,6 +11,7 @@ public class User extends Model {
     private Phones[] phones;
     private Boolean useSocialLogin;
     private String country;
+    private UserVerificationModel userVerification;
 
     public String getUuid() {
         return uuid;
@@ -66,5 +67,13 @@ public class User extends Model {
 
     public void setCountry(String country) {
         this.country = country;
+    }
+
+    public UserVerificationModel getUserVerification() {
+        return userVerification;
+    }
+
+    public void setUserVerification(UserVerificationModel userVerification) {
+        this.userVerification = userVerification;
     }
 }

@@ -1,6 +1,9 @@
 package com.iishanto.contactbuddy.service.verification;
 
+import android.content.Context;
 import android.util.Log;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.iishanto.contactbuddy.UtilityAndConstantsProvider;
 import com.iishanto.contactbuddy.events.HttpEvent;
@@ -12,29 +15,21 @@ public class PhoneVerificationService {
     private static String TAG="PHONE_VERIFICATION_SERVICE";
     private String phoneNumber;
     private HttpClient httpClient;
-    public PhoneVerificationService(String phoneNumber){
+    PhoneVerificationModel phoneVerificationModel;
+    Context context;
+    public PhoneVerificationService(String phoneNumber, Context context){
+        this.context=context;
         this.phoneNumber=phoneNumber;
-        httpClient=new OkHttpClientImpl(UtilityAndConstantsProvider.baseUrl);
+        httpClient=new OkHttpClientImpl(UtilityAndConstantsProvider.baseUrl,context);
     }
-    public void sendVerificationCode(){
-        PhoneVerificationModel phoneVerificationModel=new PhoneVerificationModel();
+    public void sendVerificationCode(HttpEvent httpEvent){
+        phoneVerificationModel=new PhoneVerificationModel();
         phoneVerificationModel.setPhone(phoneNumber);
-        httpClient.post("/api/phone/send-verification-code", phoneVerificationModel, new HttpEvent() {
-            @Override
-            public void success(String data) {
-                Log.i(TAG, "success: "+data);
-                super.success(data);
-            }
-
-            @Override
-            public void failure(Exception e) {
-                e.printStackTrace();
-                super.failure(e);
-            }
-        });
+        httpClient.post("/api/phone/send-verification-code", phoneVerificationModel, httpEvent);
     }
 
-    public Boolean verify(){
-        return false;
+    public void verify(String code,HttpEvent httpEvent){
+        phoneVerificationModel.setCode(code);
+        httpClient.post("/api/phone/verify",phoneVerificationModel,httpEvent);
     }
 }

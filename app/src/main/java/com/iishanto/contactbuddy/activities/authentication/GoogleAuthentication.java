@@ -54,7 +54,7 @@ public class GoogleAuthentication {
 
                 Log.i(TAG, "onResult: "+email+" "+name+" "+getCredentialResponse.getCredential().getData());
 
-                BasicAuthenticator basicAuthenticator=new BasicAuthenticator();
+                BasicAuthenticator basicAuthenticator=new BasicAuthenticator(appCompatActivity);
                 GoogleAuthCredential googleAuthCredential=new GoogleAuthCredential();
                 googleAuthCredential.setEmail(email);
                 googleAuthCredential.setToken(idToken);

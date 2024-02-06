@@ -1,8 +1,10 @@
 package com.iishanto.contactbuddy.service.http;
 
+import android.content.Context;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.iishanto.contactbuddy.events.HttpEvent;
 import com.iishanto.contactbuddy.model.Model;
@@ -22,11 +24,13 @@ public class OkHttpClientImpl extends HttpClient{
     public static final String TAG="OK_HTTP_CLIENT_IMPL";
     okhttp3.OkHttpClient okHttpClient;
     private final HttpUrl baseUrl;
-    public OkHttpClientImpl(){
+    public OkHttpClientImpl(AppCompatActivity context){
+        super(context);
         baseUrl=null;
         init();
     }
-    public OkHttpClientImpl(String baseUrl){
+    public OkHttpClientImpl(String baseUrl, Context context){
+        super(context);
         this.baseUrl=HttpUrl.get(baseUrl);
         Log.i(TAG, "OkHttpClientImpl: "+this.baseUrl.toString());
         init();

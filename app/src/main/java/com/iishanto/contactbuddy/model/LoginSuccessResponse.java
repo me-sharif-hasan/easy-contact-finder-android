@@ -1,15 +1,37 @@
 package com.iishanto.contactbuddy.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class LoginSuccessResponse {
     private String status;
     private String token;
-    private User user;
+    private String message;
+    private User data;
+
+    public void setData(User data) {
+        this.data = data;
+    }
+
+    public User getData() {
+        return data;
+    }
+
+    private Boolean skipLogin;
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
 
     public LoginSuccessResponse(){}
     public LoginSuccessResponse(String status, String token, User user) {
         this.status = status;
         this.token = token;
-        this.user = user;
+        this.data=user;
     }
 
     public String getStatus() {
@@ -28,11 +50,4 @@ public class LoginSuccessResponse {
         this.token = token;
     }
 
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
 }

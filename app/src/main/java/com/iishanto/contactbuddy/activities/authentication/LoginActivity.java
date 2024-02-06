@@ -6,13 +6,16 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.github.leandroborgesferreira.loadingbutton.customViews.CircularProgressButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.iishanto.contactbuddy.R;
+import com.iishanto.contactbuddy.activities.NavigatorUtility;
 import com.iishanto.contactbuddy.activities.setup.UserAccountSetupActivity;
 import com.iishanto.contactbuddy.events.UserAuthEvents;
+import com.iishanto.contactbuddy.model.Phones;
 import com.iishanto.contactbuddy.model.User;
 import com.iishanto.contactbuddy.service.AppSecurityProvider;
 import com.iishanto.contactbuddy.service.backendAuthService.BasicAuthenticator;
@@ -28,6 +31,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     CircularProgressButton loginButton;
     CircularProgressButton googleLoginButton;
     CircularProgressButton googleRegistrationButton;
+    Button registrationButton;
     TextView loginErrorText;
 
     @Override
@@ -44,6 +48,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         loginErrorText=findViewById(R.id.login_error_text);
         googleLoginButton=findViewById(R.id.login_with_google);
         googleLoginButton.setOnClickListener(this);
+        registrationButton=findViewById(R.id.register);
+        registrationButton.setOnClickListener(this);
     }
 
     public void login(){
@@ -51,7 +57,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             changeLoginButtonAnimationState(true);
             String email_input= Objects.requireNonNull(email.getText()).toString();
             String email_password= Objects.requireNonNull(password.getText()).toString();
-            BasicAuthenticator basicAuthenticator=new BasicAuthenticator();
+            BasicAuthenticator basicAuthenticator=new BasicAuthenticator(this);
             BackendCredential userLoginCredential=new ClassicCredential(email_input,email_password);
             basicAuthenticator.auth(userLoginCredential, new UserAuthEvents() {
                 @Override
@@ -133,17 +139,28 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             loginWithGoogle();
         }else if(v== googleRegistrationButton){
             loginWithGoogle();
+        }else if (v==registrationButton){
+            NavigatorUtility.getInstance(this).SwitchRegistrationPage();
         }
     }
 
 
     private void doLogin(User user){
-        Log.i(TAG, "doLogin: "+ AppSecurityProvider.getInstance().getSecurityToken());
-        if(user.getPicture()==null||user.getPhones()==null||user.getPhones().length==0){
+        int numberOfVerifiedPhones=0;
+        Log.i(TAG, "doLogin: "+user.getEmail());
+        if(user.getPhones()!=null){
+            for (Phones phones:user.getPhones()){
+                System.out.println("Checking phone: "+phones.getNumber()+" "+phones.getPhoneVerification().getStatus());
+                if((phones.getPhoneVerification()!=null&& Objects.equals(phones.getPhoneVerification().getStatus(), "verified"))) numberOfVerifiedPhones++;
+            }
+        }
+        Log.i(TAG, "doLogin: User have: "+numberOfVerifiedPhones+" verified phone number");
+        if (user.getUserVerification()==null||Objects.equals("verified",user.getUserVerification().getStatus())){
+            //take to user verification activity
+            Log.i(TAG, "doLogin: User not verified");
+        }else if(numberOfVerifiedPhones==0){
             //user is newly registered
-            Intent i=new Intent(this, UserAccountSetupActivity.class);
-            startActivity(i);
-            finish();
+            NavigatorUtility.getInstance(this).SwitchToSetupPage();
         }else{
             //user is old
         }
