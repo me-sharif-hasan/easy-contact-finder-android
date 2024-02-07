@@ -1,49 +1,41 @@
 package com.iishanto.contactbuddy.activities.setup;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.camera.core.CameraSelector;
 import androidx.camera.core.ImageCapture;
-import androidx.camera.core.ImageCaptureException;
-import androidx.camera.core.ImageProxy;
 import androidx.camera.core.Preview;
 import androidx.camera.lifecycle.ProcessCameraProvider;
 import androidx.camera.view.PreviewView;
 import androidx.core.content.ContextCompat;
 
 import android.graphics.Bitmap;
-import android.graphics.Rect;
 import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.leandroborgesferreira.loadingbutton.customViews.CircularProgressButton;
-import com.github.leandroborgesferreira.loadingbutton.customViews.OnAnimationEndListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.common.util.concurrent.ListenableFuture;
-import com.google.mlkit.vision.common.InputImage;
-import com.google.mlkit.vision.face.Face;
-import com.google.mlkit.vision.face.FaceDetection;
-import com.google.mlkit.vision.face.FaceDetector;
-import com.google.mlkit.vision.face.FaceDetectorOptions;
-import com.google.mlkit.vision.face.internal.FaceDetectorImpl;
 import com.iishanto.contactbuddy.UtilityAndConstantsProvider;
 import com.iishanto.contactbuddy.R;
+import com.iishanto.contactbuddy.activities.NavigatorUtility;
 import com.iishanto.contactbuddy.events.HttpEvent;
+import com.iishanto.contactbuddy.events.OnFaceDetected;
 import com.iishanto.contactbuddy.model.InitialSetupModel;
-import com.iishanto.contactbuddy.model.PhoneVerificationModel;
+import com.iishanto.contactbuddy.model.HttpSuccessResponse;
 import com.iishanto.contactbuddy.permissionManagement.CameraPermissionTaker;
+import com.iishanto.contactbuddy.service.FaceDetectionService;
 import com.iishanto.contactbuddy.service.http.HttpClient;
 import com.iishanto.contactbuddy.service.http.OkHttpClientImpl;
 import com.iishanto.contactbuddy.service.verification.PhoneVerificationService;
 
 import java.io.ByteArrayOutputStream;
-import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.Executor;
 
 public class UserAccountSetupActivity extends AppCompatActivity implements View.OnClickListener {
@@ -52,6 +44,7 @@ public class UserAccountSetupActivity extends AppCompatActivity implements View.
     private ImageCapture imageCapture;
     ListenableFuture<ProcessCameraProvider> processCameraProviderListenableFuture;
     private TextView noFaceFoundError;
+    private ImageView facePreview;
 
     InitialSetupModel initialSetupModel;
 
@@ -60,20 +53,27 @@ public class UserAccountSetupActivity extends AppCompatActivity implements View.
     LinearLayout phoneVerificationFields;
     EditText phoneNumber;
     EditText verificationCode;
+    FaceDetectionService faceDetectionService;
+    AppCompatActivity appCompatActivity;
+    HttpClient httpClient;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_account_setup);
-        HttpClient httpClient=new OkHttpClientImpl(UtilityAndConstantsProvider.baseUrl,this);
+        appCompatActivity =this;
+        faceDetectionService=new FaceDetectionService();
         previewView=findViewById(R.id.setup_camera_preview);
+        httpClient=new OkHttpClientImpl(UtilityAndConstantsProvider.baseUrl,this);
         circularProgressButton=findViewById(R.id.setup_take_picture_button);
         noFaceFoundError=findViewById(R.id.setup_no_face_found_error);
         phoneVerificationFields=findViewById(R.id.phone_verification_fields);
         phoneNumber=findViewById(R.id.setup_phone_number_field);
+        facePreview=findViewById(R.id.setup_face_preview);
         initialSetupModel=new InitialSetupModel();
         circularProgressButton.setOnClickListener(this);
         verificationCode=findViewById(R.id.setup_verification_code);
         new CameraPermissionTaker(this).askForCamera();
+
         processCameraProviderListenableFuture=ProcessCameraProvider.getInstance(this);
         processCameraProviderListenableFuture.addListener(()->{
             try{
@@ -113,61 +113,31 @@ public class UserAccountSetupActivity extends AppCompatActivity implements View.
     @Override
     public void onClick(View v) {
         if(v==circularProgressButton){
-            Log.i(TAG, "onClick: Capturing");
-            circularProgressButton.startAnimation();
-            imageCapture.takePicture(getExecutor(), new ImageCapture.OnImageCapturedCallback() {
+            animateLoadingButton();
+            Bitmap bitmap=previewView.getBitmap();
+            faceDetectionService.detect(bitmap,new OnFaceDetected(){
                 @Override
-                public void onCaptureSuccess(@NonNull ImageProxy image) {
-                    Log.i(TAG, "onCaptureSuccess: Capture success, "+image.getWidth()+"; "+image.getHeight());
-                    Bitmap bitmap=UtilityAndConstantsProvider.convertImageProxyToBitmap(image);
-
-                    FaceDetectorOptions options =
-                            new FaceDetectorOptions.Builder()
-                                    .setPerformanceMode(FaceDetectorOptions.PERFORMANCE_MODE_ACCURATE)
-                                    .build();
-                    FaceDetector faceDetector= FaceDetection.getClient(options);
-                    InputImage inputImage=InputImage.fromBitmap(UtilityAndConstantsProvider.convertImageProxyToBitmap(image),0);
-                    image.close();
-                    faceDetector.process(inputImage)
-                            .addOnSuccessListener(new OnSuccessListener<List<Face>>() {
-                                @Override
-                                public void onSuccess(List<Face> faces) {
-                                    circularProgressButton.revertAnimation();
-                                    if(faces.size()==0){
-                                        noFaceFoundError.setText("Have some light and come bit more closer");
-                                        noFaceFoundError.setVisibility(View.VISIBLE);
-                                    }else{
-                                        noFaceFoundError.setVisibility(View.INVISIBLE);
-                                        Rect boundingBox=faces.get(0).getBoundingBox();
-                                        int x = boundingBox.left;
-                                        int y = boundingBox.top;
-                                        int width = boundingBox.width();
-                                        int height = boundingBox.height();
-                                        Log.i(TAG, "onSuccess: "+boundingBox);
-                                        Bitmap croppedBitmap = Bitmap.createBitmap(bitmap, x, y, width, height);
-
-                                        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                                        croppedBitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
-                                        byte[] byteArray = byteArrayOutputStream.toByteArray();
-                                        String base64Image = Base64.encodeToString(byteArray, Base64.DEFAULT);
-                                        initialSetupModel.setBase64Image(base64Image);
-                                        takePhoneInput();
-                                    }
-                                }
-                            }).addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    circularProgressButton.revertAnimation();
-                                    noFaceFoundError.setText("Face detection failed");
-                                    noFaceFoundError.setVisibility(View.VISIBLE);
-                                }
-                            });
+                public void onFaceDetected(Bitmap face) {
+                    previewView.setVisibility(View.INVISIBLE);
+                    facePreview.setVisibility(View.VISIBLE);
+                    facePreview.setImageBitmap(face);
+                    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                    if(bitmap==null){
+                        onFaceNotDetected();
+                        return;
+                    }
+                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+                    byte[] byteArray = byteArrayOutputStream.toByteArray();
+                    String base64Image = Base64.encodeToString(byteArray, Base64.DEFAULT);
+                    initialSetupModel.setBase64Image(base64Image);
+                    takePhoneInput();
+                    circularProgressButton.revertAnimation();
                 }
 
                 @Override
-                public void onError(@NonNull ImageCaptureException exception) {
-                    super.onError(exception);
-                    circularProgressButton.revertAnimation();
+                public void onFaceNotDetected() {
+                    reset();
+                    showError("Face detection failed");
                 }
             });
         }
@@ -175,52 +145,106 @@ public class UserAccountSetupActivity extends AppCompatActivity implements View.
 
     private void takePhoneInput() {
         phoneVerificationFields.setVisibility(View.VISIBLE);
-        circularProgressButton.stopProgressAnimation();
-        circularProgressButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String phone=phoneNumber.getText().toString();
-                PhoneVerificationService phoneVerificationService=new PhoneVerificationService(phone, getApplicationContext());
-                phoneVerificationService.sendVerificationCode(new HttpEvent() {
-                    @Override
-                    public void success(String data) {
-                        Log.i(TAG, "success: Phone verification code sent");
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                verificationCode.setEnabled(true);
-                                circularProgressButton.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        verifyCode(phoneVerificationService);
-                                    }
-                                });
-                            }
-                        });
-                    }
+        circularProgressButton.revertAnimation();
+        circularProgressButton.setOnClickListener(v -> {
+            String phone=phoneNumber.getText().toString();
+            if(phone.length() == 0) return;
+            PhoneVerificationService phoneVerificationService=new PhoneVerificationService(phone, getApplicationContext());
+            animateLoadingButton();
+            phoneVerificationService.sendVerificationCode(new HttpEvent() {
+                @Override
+                public void success(String data) {
+                    runOnUiThread(() -> {
+                        circularProgressButton.revertAnimation();
+                        verificationCode.setVisibility(View.VISIBLE);
+                        verificationCode.setEnabled(true);
+                        circularProgressButton.setOnClickListener(v1 -> verifyCode(phoneVerificationService));
+                    });
+                }
 
-                    @Override
-                    public void failure(Exception e) {
-                        noFaceFoundError.setText("Verification failure");
-                        noFaceFoundError.setVisibility(View.VISIBLE);
-                    }
-                });
-            }
+                @Override
+                public void failure(Exception e) {
+                    reset();
+                    showError();
+                }
+            });
         });
     }
 
     private void verifyCode(PhoneVerificationService phoneVerificationService){
         String code=verificationCode.getText().toString();
+        animateLoadingButton();
         phoneVerificationService.verify(code, new HttpEvent() {
             @Override
             public void success(String data) {
-                Log.i(TAG, "success: Phone verified "+data);
+                try{
+                    HttpSuccessResponse httpSuccessResponse =new ObjectMapper().readValue(data, HttpSuccessResponse.class);
+                    if(Objects.equals(httpSuccessResponse.getStatus(), "error")) throw new Exception("Verification failure");
+                    httpClient.post("/api/user/save-info", initialSetupModel, new HttpEvent() {
+                        @Override
+                        public void success(String data) {
+                            try{
+                                Log.i(TAG, "success: "+data);
+                                HttpSuccessResponse httpSuccessResponse=new ObjectMapper().readValue(data,HttpSuccessResponse.class);
+                                if(httpSuccessResponse.getStatus().equals("error")) throw new Exception(httpSuccessResponse.getMessage());
+                                NavigatorUtility.getInstance(appCompatActivity).switchToHomePage();
+                            }catch (Exception e){
+                                //no need to revert phone verification, just check user is photo verified
+                                circularProgressButton.setOnClickListener(UserAccountSetupActivity.this);
+                                showError("Your facial information may be incorrect.");
+                                reset();
+                            }
+                        }
+
+                        @Override
+                        public void failure(Exception e) {
+                            reset();
+                            showError("Something went wrong with your number.");
+                        }
+                    });
+                    initialSetupModel.setPhoneNumber(phoneNumber.getText().toString());
+                }catch (Exception e){
+                    reset();
+                    showError("Something went wrong");
+                }
             }
 
             @Override
             public void failure(Exception e) {
-                Log.i(TAG, "failure: Pone verification error: "+e.getLocalizedMessage());
+                showError("Verification failed. Is your code correct?");
             }
+        });
+    }
+
+
+    private void showError(){
+        showError("Verification failure. Please retry");
+    }
+    private void showError(String message){
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                noFaceFoundError.setText(message);
+                noFaceFoundError.setVisibility(View.VISIBLE);
+                circularProgressButton.revertAnimation();
+            }
+        });
+    }
+
+    private void animateLoadingButton(){
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                circularProgressButton.startAnimation();
+            }
+        });
+    }
+
+    private void reset(){
+        runOnUiThread(()->{
+            circularProgressButton.revertAnimation();
+            previewView.setVisibility(View.VISIBLE);
+            facePreview.setVisibility(View.INVISIBLE);
         });
     }
 

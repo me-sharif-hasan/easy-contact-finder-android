@@ -3,17 +3,12 @@ package com.iishanto.contactbuddy;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 
 import com.iishanto.contactbuddy.activities.NavigatorUtility;
-import com.iishanto.contactbuddy.activities.authentication.LoginActivity;
 import com.iishanto.contactbuddy.events.HttpEvent;
 import com.iishanto.contactbuddy.service.http.HttpClient;
 import com.iishanto.contactbuddy.service.http.OkHttpClientImpl;
-
-import java.util.concurrent.TimeUnit;
 
 @SuppressLint("CustomSplashScreen")
 public class SplashScreen extends AppCompatActivity {
@@ -28,12 +23,12 @@ public class SplashScreen extends AppCompatActivity {
         httpClient.get("api", new HttpEvent() {
             @Override
             public void success(String data) {
-                NavigatorUtility.getInstance(context).SwitchToHomePage();
+                NavigatorUtility.getInstance(context).switchToHomePage();
             }
 
             @Override
             public void failure(Exception e) {
-                NavigatorUtility.getInstance(context).SwitchToLoginPage();
+                NavigatorUtility.getInstance(context).switchToLoginPage();
             }
         });
     }

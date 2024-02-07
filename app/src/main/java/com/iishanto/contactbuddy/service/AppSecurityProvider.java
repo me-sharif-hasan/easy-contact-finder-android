@@ -20,7 +20,7 @@ public class AppSecurityProvider {
     public String getSecurityToken(Context context) {
         SharedPreferences sharedPreferences=context.getSharedPreferences("smart-contact-app", Context.MODE_PRIVATE);
         Log.i(TAG, "getSecurityToken: "+sharedPreferences.getString("authorization","<no-auth>"));
-        return sharedPreferences.getString("authorizationm","<no-auth>");
+        return sharedPreferences.getString("authorization","<no-auth>");
     }
 
     public static AppSecurityProvider getInstance() {

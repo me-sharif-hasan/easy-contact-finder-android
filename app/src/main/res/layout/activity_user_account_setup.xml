@@ -76,8 +76,16 @@
                 android:id="@+id/setup_camera_preview"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:visibility="visible"
                 app:layout_constraintEnd_toEndOf="@+id/relativeLayout"
                 app:layout_constraintStart_toStartOf="@+id/relativeLayout" />
+            <ImageView
+                android:id="@+id/setup_face_preview"
+                android:layout_width="match_parent"
+                android:visibility="invisible"
+                android:src="@mipmap/ic_launcher_round"
+                android:layout_height="match_parent"
+                android:contentDescription="Face preview" />
         </com.google.android.material.card.MaterialCardView>
 
         <RelativeLayout
@@ -130,6 +138,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:enabled="false"
+                android:visibility="invisible"
                 android:hint="@string/phone_verification_field_text" />
         </LinearLayout>
 

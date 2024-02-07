@@ -1,6 +1,6 @@
 package com.iishanto.contactbuddy.model;
 
-public class InitialSetupModel {
+public class InitialSetupModel extends Model{
     private String base64Image;
     private String phoneNumber;
 

@@ -11,6 +11,16 @@ public class User extends Model {
     private Phones[] phones;
     private Boolean useSocialLogin;
     private String country;
+    private Boolean isPhotoVerified;
+
+    public Boolean getIsPhotoVerified() {
+        return isPhotoVerified;
+    }
+
+    public void setIsPhotoVerified(Boolean photoVerified) {
+        isPhotoVerified = photoVerified;
+    }
+
     private UserVerificationModel userVerification;
 
     public String getUuid() {

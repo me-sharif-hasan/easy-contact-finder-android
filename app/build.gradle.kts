@@ -55,7 +55,7 @@ dependencies {
     implementation ("androidx.camera:camera-view:1.3.1")
 
     implementation ("com.google.mlkit:face-detection:16.1.5")
-//    implementation("com.google.android.gms:play-services-mlkit-face-detection:17.1.0")
+    implementation("com.google.android.gms:play-services-mlkit-face-detection:17.1.0")
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")

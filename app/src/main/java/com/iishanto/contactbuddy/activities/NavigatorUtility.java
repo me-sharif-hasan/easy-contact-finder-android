@@ -14,22 +14,26 @@ public class NavigatorUtility {
     private static NavigatorUtility instance;
     private static AppCompatActivity appCompatActivity;
 
-    public void SwitchToHomePage(){
+    public void switchToHomePage(){
         Intent i=new Intent(appCompatActivity, HomePageActivity.class);
         appCompatActivity.startActivity(i);
         appCompatActivity.finish();
     }
 
-    public void SwitchToSetupPage(){
+    public void switchToSetupPage(){
         Intent i=new Intent(appCompatActivity, UserAccountSetupActivity.class);
         appCompatActivity.startActivity(i);
         appCompatActivity.finish();
     }
 
-    public void SwitchToLoginPage(){
+    public void switchToLoginPage(String message){
         Intent i=new Intent(appCompatActivity, LoginActivity.class);
+        i.putExtra("message",message);
         appCompatActivity.startActivity(i);
         appCompatActivity.finish();
+    }
+    public void switchToLoginPage(){
+        switchToLoginPage("");
     }
 
     public static NavigatorUtility getInstance(AppCompatActivity appCompatActivity) {
