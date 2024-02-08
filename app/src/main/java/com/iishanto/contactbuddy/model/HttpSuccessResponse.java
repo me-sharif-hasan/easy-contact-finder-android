@@ -1,13 +1,14 @@
 package com.iishanto.contactbuddy.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.JsonNode;
 
 import java.util.Objects;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class HttpSuccessResponse {
     private String status;
     private String message;
-    private Objects data;
+    private JsonNode data;
 
     public String getStatus() {
         return status;
@@ -17,11 +18,11 @@ public class HttpSuccessResponse {
         this.status = status;
     }
 
-    public Objects getData() {
+    public JsonNode getData() {
         return data;
     }
 
-    public void setData(Objects data) {
+    public void setData(JsonNode data) {
         this.data = data;
     }
 

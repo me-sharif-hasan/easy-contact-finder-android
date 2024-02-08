@@ -1,9 +1,154 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.home.HomePageActivity">
+    android:background="@mipmap/app_bg"
+    tools:context=".activities.home.HomePageActivity"
+    android:orientation="vertical">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout3"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:background="@mipmap/header_bg"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <io.supercharge.shimmerlayout.ShimmerLayout
+            android:id="@+id/contact_profile_avatar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+            <com.google.android.material.imageview.ShapeableImageView
+                android:layout_width="180dp"
+                android:layout_height="180dp"
+                android:layout_marginStart="4dp"
+                android:background="@color/white"
+                android:padding="4dp"
+                android:src="@mipmap/img"
+                app:shapeAppearanceOverlay="@style/roundedImageViewRounded"
+                app:strokeColor="#BB4DFF"
+                app:strokeWidth="5dp" />
+        </io.supercharge.shimmerlayout.ShimmerLayout>
+
+
+        <io.supercharge.shimmerlayout.ShimmerLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:id="@+id/home_name"
+            app:shimmer_color="@color/black"
+            android:paddingHorizontal="2dp"
+            app:layout_constraintEnd_toEndOf="@+id/home_scan_contact_button"
+            app:layout_constraintHorizontal_bias="0.216"
+            app:layout_constraintStart_toEndOf="@+id/contact_profile_avatar"
+            app:layout_constraintTop_toTopOf="parent">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/pacifico_regular"
+                android:textColor="#00378A"
+                android:text="loading your information"
+                android:textSize="20sp" />
+        </io.supercharge.shimmerlayout.ShimmerLayout>
+
+        <Button
+            android:id="@+id/home_profile_button"
+            android:layout_width="61dp"
+            android:layout_height="61dp"
+            android:layout_marginTop="28dp"
+            android:background="@mipmap/profile_icon"
+            app:layout_constraintBottom_toBottomOf="@+id/home_scan_contact_button"
+            app:layout_constraintStart_toEndOf="@+id/contact_profile_avatar"
+            app:layout_constraintTop_toBottomOf="@+id/home_name" />
+
+        <Button
+            android:id="@+id/home_chat_button"
+            android:layout_width="61dp"
+            android:layout_height="61dp"
+            android:layout_marginStart="8dp"
+            android:background="@mipmap/chat_button"
+            app:layout_constraintBottom_toBottomOf="@+id/contact_profile_avatar"
+            app:layout_constraintStart_toEndOf="@+id/home_profile_button"
+            app:layout_constraintTop_toBottomOf="@+id/home_profile_button"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <Button
+            android:id="@+id/home_logout_button"
+            android:layout_width="61dp"
+            android:layout_height="61dp"
+            android:layout_marginStart="28dp"
+            android:layout_marginTop="16dp"
+            android:background="@mipmap/logout_button"
+            android:hapticFeedbackEnabled="true"
+            app:layout_constraintBottom_toBottomOf="@+id/home_chat_button"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/home_chat_button"
+            app:layout_constraintTop_toBottomOf="@+id/home_scan_contact_button" />
+
+        <Button
+            android:id="@+id/home_scan_contact_button"
+            android:layout_width="61dp"
+            android:layout_height="61dp"
+            android:layout_marginStart="28dp"
+            android:layout_marginTop="12dp"
+            android:background="@mipmap/scan_icon"
+            android:hapticFeedbackEnabled="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/home_chat_button"
+            app:layout_constraintTop_toBottomOf="@+id/home_name" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:elevation="-20dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="-25dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout3"
+        app:layout_constraintVertical_bias="0.007"
+        tools:layout_editor_absoluteX="0dp">
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/home_tabs"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="#FAFAFA"
+            app:tabTextColor="#373737"
+            app:tabIndicatorColor="#BD40FF"
+            app:tabRippleColor="@color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+            <com.google.android.material.tabs.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Recent contacts"/>
+            <com.google.android.material.tabs.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Nearby contacts"/>
+        </com.google.android.material.tabs.TabLayout>
+
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/home_view_pager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="50dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/home_tabs"
+            app:layout_constraintVertical_bias="1.0" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</LinearLayout>

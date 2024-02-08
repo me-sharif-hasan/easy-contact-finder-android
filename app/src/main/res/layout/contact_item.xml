@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="100dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@mipmap/contact_bg"
+    android:orientation="vertical">
+    <io.supercharge.shimmerlayout.ShimmerLayout
+        android:id="@+id/contact_item_profile_avatar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+        <com.google.android.material.imageview.ShapeableImageView
+            android:layout_width="79dp"
+            android:layout_height="79dp"
+            android:layout_marginStart="4dp"
+            android:background="@color/white"
+            android:padding="4dp"
+            android:src="@mipmap/img"
+            app:strokeColor="#4D9DFF"
+            app:strokeWidth="5dp"
+            app:shapeAppearanceOverlay="@style/roundedImageViewRounded"
+            />
+    </io.supercharge.shimmerlayout.ShimmerLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginStart="12dp"
+        android:orientation="vertical"
+        app:layout_constraintStart_toEndOf="@+id/contact_item_profile_avatar"
+        tools:layout_editor_absoluteY="0dp">
+
+        <TextView
+            android:id="@+id/contact_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/pacifico_regular"
+            android:text="Miss Jannatul Ferdos"
+            android:textSize="20sp"
+            tools:layout_editor_absoluteX="95dp"
+            tools:layout_editor_absoluteY="11dp" />
+
+        <TextView
+            android:id="@+id/contact_address"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:height="25dp"
+            android:fontFamily="@font/akaya_talivigala"
+            android:lineHeight="2dp"
+            android:text="Rajapur, Pabna"
+            android:textSize="17sp"
+            tools:layout_editor_absoluteX="95dp"
+            tools:layout_editor_absoluteY="11dp" />
+
+        <TextView
+            android:id="@+id/contact_state"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/akaya_talivigala"
+            android:lineHeight="2dp"
+            android:text="Rajapur, Banladesh"
+            android:textSize="20sp"
+            tools:layout_editor_absoluteX="95dp"
+            tools:layout_editor_absoluteY="11dp" />
+    </LinearLayout>
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#00000000"
+        android:src="@mipmap/save_button"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.516"
+        app:layout_constraintStart_toEndOf="@+id/linearLayout2"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
