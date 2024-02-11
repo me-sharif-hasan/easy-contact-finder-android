@@ -26,7 +26,7 @@ import com.iishanto.contactbuddy.events.HttpEvent;
 import com.iishanto.contactbuddy.events.OnFaceDetected;
 import com.iishanto.contactbuddy.model.InitialSetupModel;
 import com.iishanto.contactbuddy.model.HttpSuccessResponse;
-import com.iishanto.contactbuddy.permissionManagement.CameraPermissionTaker;
+import com.iishanto.contactbuddy.permissionManagement.PermissionManager;
 import com.iishanto.contactbuddy.service.CameraService;
 import com.iishanto.contactbuddy.service.FaceDetectionService;
 import com.iishanto.contactbuddy.service.http.HttpClient;
@@ -74,7 +74,7 @@ public class UserAccountSetupActivity extends AppCompatActivity implements View.
         initialSetupModel=new InitialSetupModel();
         circularProgressButton.setOnClickListener(this);
         verificationCode=findViewById(R.id.setup_verification_code);
-        new CameraPermissionTaker(this).askForCamera();
+        new PermissionManager(this).askForPermissions();
 
         processCameraProviderListenableFuture=ProcessCameraProvider.getInstance(this);
         processCameraProviderListenableFuture.addListener(()->{

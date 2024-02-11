@@ -59,7 +59,7 @@ public class NavigatorUtility {
 
     public void switchToNumberSavingPage(User user) {
         Intent i=new Intent(appCompatActivity, SaveContactActivity.class);
-        i.putExtra("user_id",user);
+        i.putExtra("user",user);
         appCompatActivity.startActivity(i);
         appCompatActivity.finish();
     }

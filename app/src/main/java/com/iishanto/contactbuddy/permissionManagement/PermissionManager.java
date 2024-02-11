@@ -2,30 +2,30 @@ package com.iishanto.contactbuddy.permissionManagement;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
-import android.os.Build;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 
 import java.util.Map;
 
-public class CameraPermissionTaker {
+public class PermissionManager {
 
     private static final int CAMERA_PERMISSION_REQUEST_CODE = 100;
     private static final String[] REQUIRED_PERMISSIONS = {
             Manifest.permission.CAMERA,
             Manifest.permission.RECORD_AUDIO,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_CONTACTS,
+            Manifest.permission.READ_CONTACTS
     };
 
     private final ActivityResultLauncher<String[]> activityResultLauncher;
     private final FragmentActivity fragmentActivity;
 
-    public CameraPermissionTaker(FragmentActivity fragmentActivity) {
+    public PermissionManager(FragmentActivity fragmentActivity) {
         this.fragmentActivity = fragmentActivity;
 
         this.activityResultLauncher = fragmentActivity.registerForActivityResult(
@@ -34,7 +34,7 @@ public class CameraPermissionTaker {
         );
     }
 
-    public void askForCamera() {
+    public void askForPermissions() {
         // Check if the required permissions are granted
         if (checkPermissions()) {
             // Permissions are already granted, perform your logic here

@@ -3,7 +3,7 @@ package com.iishanto.contactbuddy.model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Phones {
+public class Phones extends Model {
     private String id;
     private String number;
     private String country;
