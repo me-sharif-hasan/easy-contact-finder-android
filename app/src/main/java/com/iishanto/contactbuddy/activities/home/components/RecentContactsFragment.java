@@ -13,6 +13,8 @@ import android.view.ViewGroup;
 import com.iishanto.contactbuddy.R;
 import com.iishanto.contactbuddy.activities.home.components.contact.ContactListRecyclerViewAdapter;
 
+import java.util.Objects;
+
 public class RecentContactsFragment extends Fragment {
 
     RecyclerView recyclerView;
@@ -20,7 +22,7 @@ public class RecentContactsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_recent_contacts, container, false);
         recyclerView=view.findViewById(R.id.contact_list_view);
-        ContactListRecyclerViewAdapter contactListRecyclerViewAdapter=new ContactListRecyclerViewAdapter();
+        ContactListRecyclerViewAdapter contactListRecyclerViewAdapter=new ContactListRecyclerViewAdapter(requireActivity().getApplicationContext());
         recyclerView.setAdapter(contactListRecyclerViewAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
         return view;

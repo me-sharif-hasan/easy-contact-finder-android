@@ -5,19 +5,19 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.iishanto.contactbuddy.R;
+import com.iishanto.contactbuddy.activities.NavigatorUtility;
 import com.iishanto.contactbuddy.activities.home.components.HomePageTabPagerAdapter;
 import com.iishanto.contactbuddy.activities.home.services.HomeActivityDataService;
-import com.iishanto.contactbuddy.events.HttpEvent;
 import com.iishanto.contactbuddy.events.ImageLoadedEvent;
 import com.iishanto.contactbuddy.events.UserLoadedEvent;
 import com.iishanto.contactbuddy.model.User;
@@ -25,7 +25,7 @@ import com.iishanto.contactbuddy.service.image.ImageService;
 
 import io.supercharge.shimmerlayout.ShimmerLayout;
 
-public class HomePageActivity extends AppCompatActivity {
+public class HomePageActivity extends AppCompatActivity implements View.OnClickListener {
 
     HomeActivityDataService dataService;
 
@@ -35,6 +35,8 @@ public class HomePageActivity extends AppCompatActivity {
     ShimmerLayout profilePicture;
     ShimmerLayout name;
     ImageService imageService;
+
+    Button scanButton;
 
     private final String TAG="HOME_PAGE_ACTIVITY";
 
@@ -50,6 +52,8 @@ public class HomePageActivity extends AppCompatActivity {
         profilePicture=findViewById(R.id.contact_profile_avatar);
         name=findViewById(R.id.home_name);
         imageService=new ImageService(this);
+        scanButton=findViewById(R.id.home_scan_contact_button);
+        scanButton.setOnClickListener(this);
         new TabLayoutMediator(tabLayout, tabViewPager, new TabLayoutMediator.TabConfigurationStrategy() {
             @Override
             public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
@@ -102,5 +106,12 @@ public class HomePageActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         });
+    }
+
+    @Override
+    public void onClick(View v) {
+        if(v==scanButton){
+            NavigatorUtility.getInstance(this).switchToContactFinderWithScanPage();
+        }
     }
 }

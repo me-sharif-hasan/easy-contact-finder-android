@@ -13,8 +13,8 @@ import androidx.credentials.exceptions.GetCredentialException;
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption;
 import com.iishanto.contactbuddy.R;
 import com.iishanto.contactbuddy.events.UserAuthEvents;
-import com.iishanto.contactbuddy.service.backendAuth.BasicAuthenticator;
-import com.iishanto.contactbuddy.service.backendAuth.credential.GoogleAuthCredential;
+import com.iishanto.contactbuddy.service.user.backendAuth.BasicAuthenticator;
+import com.iishanto.contactbuddy.service.user.backendAuth.credential.GoogleAuthCredential;
 
 import java.util.concurrent.Executor;
 

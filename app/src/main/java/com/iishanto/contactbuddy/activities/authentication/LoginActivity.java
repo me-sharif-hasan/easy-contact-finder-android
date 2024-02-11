@@ -16,9 +16,9 @@ import com.iishanto.contactbuddy.activities.NavigatorUtility;
 import com.iishanto.contactbuddy.events.UserAuthEvents;
 import com.iishanto.contactbuddy.model.Phones;
 import com.iishanto.contactbuddy.model.User;
-import com.iishanto.contactbuddy.service.backendAuth.BasicAuthenticator;
-import com.iishanto.contactbuddy.service.backendAuth.credential.BackendCredential;
-import com.iishanto.contactbuddy.service.backendAuth.credential.ClassicCredential;
+import com.iishanto.contactbuddy.service.user.backendAuth.BasicAuthenticator;
+import com.iishanto.contactbuddy.service.user.backendAuth.credential.BackendCredential;
+import com.iishanto.contactbuddy.service.user.backendAuth.credential.ClassicCredential;
 
 import java.util.Objects;
 

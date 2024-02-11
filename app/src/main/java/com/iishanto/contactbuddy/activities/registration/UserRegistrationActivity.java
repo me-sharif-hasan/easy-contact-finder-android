@@ -13,7 +13,7 @@ import com.iishanto.contactbuddy.R;
 import com.iishanto.contactbuddy.activities.NavigatorUtility;
 import com.iishanto.contactbuddy.events.HttpEvent;
 import com.iishanto.contactbuddy.model.UserRegistrationModel;
-import com.iishanto.contactbuddy.service.userRegistration.UserRegistrationService;
+import com.iishanto.contactbuddy.service.user.userRegistration.UserRegistrationService;
 
 public class UserRegistrationActivity extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG="USER_REGISTRATION_ACTIVITY";

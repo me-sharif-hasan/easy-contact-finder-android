@@ -1,9 +1,12 @@
 package com.iishanto.contactbuddy.model;
 
+import android.util.Log;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class User extends Model {
+    private Long id;
     private String uuid;
     private String name;
     private String email;
@@ -12,6 +15,7 @@ public class User extends Model {
     private Boolean useSocialLogin;
     private String country;
     private Boolean isPhotoVerified;
+    private Float score;
 
     public Boolean getIsPhotoVerified() {
         return isPhotoVerified;
@@ -85,5 +89,29 @@ public class User extends Model {
 
     public void setUserVerification(UserVerificationModel userVerification) {
         this.userVerification = userVerification;
+    }
+
+    public Boolean getPhotoVerified() {
+        return isPhotoVerified;
+    }
+
+    public void setPhotoVerified(Boolean photoVerified) {
+        isPhotoVerified = photoVerified;
+    }
+
+    public Float getScore() {
+        return score;
+    }
+
+    public void setScore(Float score) {
+        this.score = score;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }

@@ -5,9 +5,12 @@ import android.content.Intent;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.iishanto.contactbuddy.activities.authentication.LoginActivity;
+import com.iishanto.contactbuddy.activities.camera.CameraActivity;
+import com.iishanto.contactbuddy.activities.contactManagement.SaveContactActivity;
 import com.iishanto.contactbuddy.activities.home.HomePageActivity;
 import com.iishanto.contactbuddy.activities.registration.UserRegistrationActivity;
 import com.iishanto.contactbuddy.activities.setup.UserAccountSetupActivity;
+import com.iishanto.contactbuddy.model.User;
 
 public class NavigatorUtility {
     private NavigatorUtility(){};
@@ -32,6 +35,12 @@ public class NavigatorUtility {
         appCompatActivity.startActivity(i);
         appCompatActivity.finish();
     }
+
+    public void switchToContactFinderWithScanPage(){
+        Intent i=new Intent(appCompatActivity, CameraActivity.class);
+        appCompatActivity.startActivity(i);
+    }
+
     public void switchToLoginPage(){
         switchToLoginPage("");
     }
@@ -44,6 +53,13 @@ public class NavigatorUtility {
 
     public void SwitchRegistrationPage() {
         Intent i=new Intent(appCompatActivity, UserRegistrationActivity.class);
+        appCompatActivity.startActivity(i);
+        appCompatActivity.finish();
+    }
+
+    public void switchToNumberSavingPage(User user) {
+        Intent i=new Intent(appCompatActivity, SaveContactActivity.class);
+        i.putExtra("user_id",user);
         appCompatActivity.startActivity(i);
         appCompatActivity.finish();
     }

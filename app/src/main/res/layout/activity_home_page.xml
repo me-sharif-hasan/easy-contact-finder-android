@@ -9,7 +9,7 @@
     android:orientation="vertical">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constraintLayout3"
+        android:id="@+id/home_page_header"
         android:layout_width="match_parent"
         android:layout_height="250dp"
         android:background="@mipmap/header_bg"
@@ -80,7 +80,7 @@
             android:id="@+id/home_logout_button"
             android:layout_width="61dp"
             android:layout_height="61dp"
-            android:layout_marginStart="28dp"
+            android:layout_marginStart="20dp"
             android:layout_marginTop="16dp"
             android:background="@mipmap/logout_button"
             android:hapticFeedbackEnabled="true"
@@ -88,13 +88,14 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toEndOf="@+id/home_chat_button"
-            app:layout_constraintTop_toBottomOf="@+id/home_scan_contact_button" />
+            app:layout_constraintTop_toBottomOf="@+id/home_scan_contact_button"
+            app:layout_constraintVertical_bias="0.0" />
 
         <Button
             android:id="@+id/home_scan_contact_button"
             android:layout_width="61dp"
             android:layout_height="61dp"
-            android:layout_marginStart="28dp"
+            android:layout_marginStart="20dp"
             android:layout_marginTop="12dp"
             android:background="@mipmap/scan_icon"
             android:hapticFeedbackEnabled="true"
@@ -111,7 +112,7 @@
         android:layout_height="match_parent"
         android:layout_marginTop="-25dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/constraintLayout3"
+        app:layout_constraintTop_toBottomOf="@+id/home_page_header"
         app:layout_constraintVertical_bias="0.007"
         tools:layout_editor_absoluteX="0dp">
 

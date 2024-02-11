@@ -1,4 +1,4 @@
-package com.iishanto.contactbuddy.service.backendAuth;
+package com.iishanto.contactbuddy.service.user.backendAuth;
 
 import android.content.Context;
 import android.util.Log;
@@ -9,9 +9,9 @@ import com.iishanto.contactbuddy.events.HttpEvent;
 import com.iishanto.contactbuddy.events.UserAuthEvents;
 import com.iishanto.contactbuddy.model.LoginSuccessResponse;
 import com.iishanto.contactbuddy.service.AppSecurityProvider;
-import com.iishanto.contactbuddy.service.backendAuth.credential.BackendCredential;
-import com.iishanto.contactbuddy.service.backendAuth.credential.ClassicCredential;
-import com.iishanto.contactbuddy.service.backendAuth.credential.GoogleAuthCredential;
+import com.iishanto.contactbuddy.service.user.backendAuth.credential.BackendCredential;
+import com.iishanto.contactbuddy.service.user.backendAuth.credential.ClassicCredential;
+import com.iishanto.contactbuddy.service.user.backendAuth.credential.GoogleAuthCredential;
 import com.iishanto.contactbuddy.service.http.HttpClient;
 import com.iishanto.contactbuddy.service.http.OkHttpClientImpl;
 

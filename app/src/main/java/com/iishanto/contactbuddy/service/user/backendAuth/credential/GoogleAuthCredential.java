@@ -1,4 +1,4 @@
-package com.iishanto.contactbuddy.service.backendAuth.credential;
+package com.iishanto.contactbuddy.service.user.backendAuth.credential;
 
 import com.iishanto.contactbuddy.UtilityAndConstantsProvider;
 

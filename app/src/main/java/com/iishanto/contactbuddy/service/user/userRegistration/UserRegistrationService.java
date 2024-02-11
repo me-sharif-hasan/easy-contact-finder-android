@@ -1,4 +1,4 @@
-package com.iishanto.contactbuddy.service.userRegistration;
+package com.iishanto.contactbuddy.service.user.userRegistration;
 
 import android.content.Context;
 

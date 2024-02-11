@@ -1,9 +1,7 @@
 package com.iishanto.contactbuddy.activities.setup;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.camera.core.CameraSelector;
 import androidx.camera.core.ImageCapture;
-import androidx.camera.core.Preview;
 import androidx.camera.lifecycle.ProcessCameraProvider;
 import androidx.camera.view.PreviewView;
 import androidx.core.content.ContextCompat;
@@ -29,6 +27,7 @@ import com.iishanto.contactbuddy.events.OnFaceDetected;
 import com.iishanto.contactbuddy.model.InitialSetupModel;
 import com.iishanto.contactbuddy.model.HttpSuccessResponse;
 import com.iishanto.contactbuddy.permissionManagement.CameraPermissionTaker;
+import com.iishanto.contactbuddy.service.CameraService;
 import com.iishanto.contactbuddy.service.FaceDetectionService;
 import com.iishanto.contactbuddy.service.http.HttpClient;
 import com.iishanto.contactbuddy.service.http.OkHttpClientImpl;
@@ -56,11 +55,14 @@ public class UserAccountSetupActivity extends AppCompatActivity implements View.
     FaceDetectionService faceDetectionService;
     AppCompatActivity appCompatActivity;
     HttpClient httpClient;
+
+    CameraService cameraService;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_account_setup);
         appCompatActivity =this;
+        cameraService=new CameraService(this);
         faceDetectionService=new FaceDetectionService();
         previewView=findViewById(R.id.setup_camera_preview);
         httpClient=new OkHttpClientImpl(UtilityAndConstantsProvider.baseUrl,this);
@@ -78,7 +80,7 @@ public class UserAccountSetupActivity extends AppCompatActivity implements View.
         processCameraProviderListenableFuture.addListener(()->{
             try{
                 ProcessCameraProvider processCameraProvider=processCameraProviderListenableFuture.get();
-                startCameraX(processCameraProvider);
+                cameraService.startCameraX(processCameraProvider,previewView,imageCapture);
             }catch (Throwable e){
                 Log.i(TAG, "onCreate: "+e.getLocalizedMessage());
             }
@@ -100,14 +102,7 @@ public class UserAccountSetupActivity extends AppCompatActivity implements View.
         return ContextCompat.getMainExecutor(this);
     }
 
-    private void startCameraX(ProcessCameraProvider processCameraProvider) {
-        processCameraProvider.unbindAll();
-        CameraSelector cameraSelector=new CameraSelector.Builder().requireLensFacing(CameraSelector.LENS_FACING_FRONT).build();
-        Preview preview=new Preview.Builder().build();
-        preview.setSurfaceProvider(previewView.getSurfaceProvider());
-        imageCapture = new ImageCapture.Builder().setCaptureMode(ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY).build();
-        processCameraProvider.bindToLifecycle(this,cameraSelector,preview,imageCapture);
-    }
+
 
 
     @Override
