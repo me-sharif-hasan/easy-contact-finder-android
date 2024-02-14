@@ -18,6 +18,7 @@ import com.google.android.material.imageview.ShapeableImageView;
 import com.iishanto.contactbuddy.R;
 import com.iishanto.contactbuddy.activities.NavigatorUtility;
 import com.iishanto.contactbuddy.events.ImageLoadedEvent;
+import com.iishanto.contactbuddy.model.Phones;
 import com.iishanto.contactbuddy.model.User;
 import com.iishanto.contactbuddy.service.image.ImageService;
 
@@ -93,16 +94,15 @@ public class ContactListRecyclerViewAdapter extends RecyclerView.Adapter<Contact
 
         public void saveContact(){
             if (user==null) {
-                if(context instanceof AppCompatActivity) ((AppCompatActivity) context).runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(context,"Error saving contact.",Toast.LENGTH_LONG).show();
-                    }
-                });
+                if(context instanceof AppCompatActivity) ((AppCompatActivity) context).runOnUiThread(() -> Toast.makeText(context,"Error saving contact.",Toast.LENGTH_LONG).show());
                 return;
             }
 
             if(context instanceof AppCompatActivity){
+
+                for (Phones p:user.getPhones()){
+                    Log.i("NAVIGATOR", "onCreate vgb 1: "+p.getId());
+                }
                 NavigatorUtility.getInstance((AppCompatActivity) context).switchToNumberSavingPage(user);
             }
         }

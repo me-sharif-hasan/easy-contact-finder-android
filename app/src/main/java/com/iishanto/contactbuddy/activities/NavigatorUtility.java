@@ -1,6 +1,7 @@
 package com.iishanto.contactbuddy.activities;
 
 import android.content.Intent;
+import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -10,6 +11,7 @@ import com.iishanto.contactbuddy.activities.contactManagement.SaveContactActivit
 import com.iishanto.contactbuddy.activities.home.HomePageActivity;
 import com.iishanto.contactbuddy.activities.registration.UserRegistrationActivity;
 import com.iishanto.contactbuddy.activities.setup.UserAccountSetupActivity;
+import com.iishanto.contactbuddy.model.Phones;
 import com.iishanto.contactbuddy.model.User;
 
 public class NavigatorUtility {

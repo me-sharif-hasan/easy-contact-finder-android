@@ -46,7 +46,7 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
         setContentView(R.layout.activity_home_page);
         tabViewPager=findViewById(R.id.home_view_pager);
         tabLayout=findViewById(R.id.home_tabs);
-        tabViewPager.setAdapter(new HomePageTabPagerAdapter(this));
+        tabViewPager.setAdapter(new HomePageTabPagerAdapter(this,this));
         tabViewPager.setCurrentItem(0);
         dataService=new HomeActivityDataService(this);
         profilePicture=findViewById(R.id.contact_profile_avatar);

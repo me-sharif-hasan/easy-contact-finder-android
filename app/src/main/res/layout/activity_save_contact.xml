@@ -44,52 +44,45 @@
         android:paddingHorizontal="10dp"
         android:text="@string/save_contact_to_your_device_text"
         android:textSize="25sp"
-        app:layout_constraintBottom_toTopOf="@+id/scrollView2"
-        app:layout_constraintEnd_toEndOf="@+id/scrollView2"
-        app:layout_constraintStart_toStartOf="@+id/scrollView2"
+        app:layout_constraintEnd_toEndOf="@+id/contact_form_collection"
+        app:layout_constraintStart_toStartOf="@+id/contact_form_collection"
         app:layout_constraintTop_toBottomOf="@+id/constraintLayout2" />
 
-    <ScrollView
-        android:id="@+id/scrollView2"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/contact_form_collection"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="200dp"
-        android:layout_marginBottom="60dp"
-        android:background="@mipmap/contact_save_form_bg"
+        android:layout_marginBottom="70dp"
+        android:orientation="vertical"
+        android:paddingHorizontal="20dp"
+        app:layout_constraintBottom_toTopOf="@+id/save_contact_button"
+        app:layout_constraintTop_toBottomOf="@+id/textView4"
+        app:layout_constraintVertical_bias="1.0"
+        tools:layout_editor_absoluteX="0dp">
+
+    </androidx.recyclerview.widget.RecyclerView>
+
+    <ImageButton
+        android:id="@+id/contact_add_new_field"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginBottom="16dp"
+        android:backgroundTintMode="screen"
+        android:src="@drawable/ic_add_new_contact"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="10dp"
-            android:orientation="vertical"
-            android:paddingHorizontal="20dp">
-
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginTop="10dp"
-                android:id="@+id/name"
-                android:background="@mipmap/input_bg_1" />
-
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginTop="10dp"
-                android:id="@+id/phone_number"
-                android:background="@mipmap/input_bg_1" />
-        </LinearLayout>
-    </ScrollView>
+        app:layout_constraintStart_toStartOf="@+id/contact_form_collection" />
 
     <com.github.leandroborgesferreira.loadingbutton.customViews.CircularProgressButton
         android:id="@+id/save_contact_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="160dp"
+        android:layout_marginBottom="12dp"
         android:text="Save"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/scrollView2"
-        app:layout_constraintTop_toBottomOf="@+id/scrollView2"
-        app:layout_constraintVertical_bias="0.583" />
+        app:layout_constraintHorizontal_bias="0.981"
+        app:layout_constraintStart_toEndOf="@+id/contact_add_new_field" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -2,6 +2,7 @@
 package com.iishanto.contactbuddy.activities.camera;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.camera.core.CameraX;
 import androidx.camera.core.ImageCapture;
 import androidx.camera.lifecycle.ProcessCameraProvider;
 import androidx.camera.view.PreviewView;
@@ -9,6 +10,7 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
@@ -47,20 +49,12 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
         previewView=findViewById(R.id.camer_preview);
-        cameraService=new CameraService(this);
         circularProgressButton=findViewById(R.id.camera_capture_button);
         circularProgressButton.setOnClickListener(this);
         basicUserService=new BasicUserService(this);
         contactListRecyclerViewAdapter=new ContactListRecyclerViewAdapter(this);
-        ListenableFuture<ProcessCameraProvider> processCameraProviderListenableFuture=ProcessCameraProvider.getInstance(this);
-        processCameraProviderListenableFuture.addListener(()->{
-            try {
-                cameraService.startCameraX(processCameraProviderListenableFuture.get(),previewView,imageCapture,true);
-            } catch (ExecutionException | InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-        }, ContextCompat.getMainExecutor(this));
 
+        startCamera();
 
         bottomSheetDialog=new BottomSheetDialog(CameraActivity.this);
         sheet= LayoutInflater.from(getApplicationContext()).inflate(R.layout.phone_number_search_result_bottom_sheet, (ViewGroup) sheet);
@@ -68,12 +62,34 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         recyclerView.setAdapter(contactListRecyclerViewAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         bottomSheetDialog.setContentView(sheet);
+        bottomSheetDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                Log.i(TAG, "onCancel: Bottom sheet canceled");
+                startCamera();
+            }
+        });
+    }
+
+
+    private void startCamera(){
+        ListenableFuture<ProcessCameraProvider> processCameraProviderListenableFuture=ProcessCameraProvider.getInstance(this);
+        try {
+            ProcessCameraProvider processCameraProvider=processCameraProviderListenableFuture.get();
+            cameraService=new CameraService(this,processCameraProvider);
+            processCameraProviderListenableFuture.addListener(()->{
+                cameraService.startCameraX(previewView,imageCapture,true);
+            }, ContextCompat.getMainExecutor(this));
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void onClick(View v) {
         if(v==circularProgressButton){
             circularProgressButton.startAnimation();
+            cameraService.unbind();
             Bitmap bitmap=previewView.getBitmap();
             searchUserByImage(bitmap);
         }
@@ -81,7 +97,6 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
 
     private void searchUserByImage(final Bitmap bitmap){
         new Thread(() -> {
-//            Bitmap bitmap=UtilityAndConstantsProvider.createBlackAndWhite(bitmap_color);
             String base64 = UtilityAndConstantsProvider.convertBitmapToBase64(bitmap);
             Base64ImageSearchModel imageSearchModel = new Base64ImageSearchModel();
             imageSearchModel.setBase_64_encoded_string(base64);

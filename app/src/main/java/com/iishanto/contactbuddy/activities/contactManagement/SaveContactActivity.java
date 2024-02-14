@@ -1,6 +1,8 @@
 package com.iishanto.contactbuddy.activities.contactManagement;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.accounts.AccountManager;
 import android.content.ContentProviderOperation;
@@ -13,7 +15,9 @@ import android.os.RemoteException;
 import android.provider.Contacts;
 import android.provider.ContactsContract;
 import android.util.Log;
+import android.util.Pair;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,13 +25,19 @@ import com.github.leandroborgesferreira.loadingbutton.customViews.CircularProgre
 import com.google.android.material.imageview.ShapeableImageView;
 import com.iishanto.contactbuddy.R;
 import com.iishanto.contactbuddy.activities.NavigatorUtility;
+import com.iishanto.contactbuddy.activities.contactManagement.components.ContactDynamicFormRecyclerViewAdapter;
+import com.iishanto.contactbuddy.activities.home.components.contact.ContactListRecyclerViewAdapter;
 import com.iishanto.contactbuddy.events.ImageLoadedEvent;
+import com.iishanto.contactbuddy.model.Phones;
+import com.iishanto.contactbuddy.model.SaveContactModel;
 import com.iishanto.contactbuddy.model.User;
 import com.iishanto.contactbuddy.permissionManagement.PermissionManager;
 import com.iishanto.contactbuddy.service.contact.ContactService;
 import com.iishanto.contactbuddy.service.image.ImageService;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
 import io.supercharge.shimmerlayout.ShimmerLayout;
@@ -36,26 +46,34 @@ public class SaveContactActivity extends AppCompatActivity implements View.OnCli
     private final String TAG="SAVE_CONTACT_ACTIVITY";
     User user;
 
-    TextView name;
+//    TextView name;
     TextView email;
-    TextView phoneNumber;
+//    TextView phoneNumber;
     CircularProgressButton saveButton;
     ShimmerLayout shimmerLayout;
     ImageService imageService;
     ContactService contactService;
+    RecyclerView contactForms;
+    ImageButton contactAddNewField;
     Bitmap bitmap;
 
+    ContactDynamicFormRecyclerViewAdapter contactDynamicFormRecyclerViewAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_save_contact);
         user= (User) Objects.requireNonNull(getIntent().getExtras()).get("user");
+
+        contactDynamicFormRecyclerViewAdapter=new ContactDynamicFormRecyclerViewAdapter(this,user);
+
         Log.i(TAG, "onCreate: "+user.getName());
         shimmerLayout=findViewById(R.id.contact_image_shimmer);
-        name=findViewById(R.id.name);
-        phoneNumber=findViewById(R.id.phone_number);
-        name.setText(user.getName());
+//        name=findViewById(R.id.name);
+//        phoneNumber=findViewById(R.id.phone_number);
+        contactForms=findViewById(R.id.contact_form_collection);
+        contactAddNewField=findViewById(R.id.contact_add_new_field);
+//        name.setText(user.getName());
         imageService=new ImageService(this);
         saveButton=findViewById(R.id.save_contact_button);
         contactService=new ContactService(this);
@@ -67,7 +85,7 @@ public class SaveContactActivity extends AppCompatActivity implements View.OnCli
     private void init(){
         //setting phone numbers
         if(user.getPhones()!=null&&user.getPhones().length>0){
-            phoneNumber.setText(user.getPhones()[0].getNumber());
+//            phoneNumber.setText(user.getPhones()[0].getNumber());
         }
         //setting photo
         shimmerLayout.startShimmerAnimation();
@@ -90,8 +108,11 @@ public class SaveContactActivity extends AppCompatActivity implements View.OnCli
                 shimmerLayout.stopShimmerAnimation();
             }
         });
-
-
+        //setting the contact form
+        contactForms.setLayoutManager(new LinearLayoutManager(this));
+        contactForms.setAdapter(contactDynamicFormRecyclerViewAdapter);
+        // -> adding add new fields functionalities
+        contactAddNewField.setOnClickListener(this);
         saveButton.setOnClickListener(this);
     }
 
@@ -99,14 +120,17 @@ public class SaveContactActivity extends AppCompatActivity implements View.OnCli
     @Override
     public void onClick(View v) {
         if(v==saveButton){
-            addContact(name.getText().toString(),phoneNumber.getText().toString(),bitmap);
+            try {
+                List <SaveContactModel> numbers=contactDynamicFormRecyclerViewAdapter.getAliases();
+                contactService.saveAllContacts(numbers,bitmap);
+                Toast.makeText(this,"Contact saved",Toast.LENGTH_LONG).show();
+                NavigatorUtility.getInstance(this).switchToHomePage();
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }else if (v==contactAddNewField){
+            contactDynamicFormRecyclerViewAdapter.addNewField();
         }
-    }
-
-    private void addContact(String name, String phone,Bitmap bitmap) {
-            contactService.saveContact(name,phone,bitmap);
-        Toast.makeText(this,"Contact saved",Toast.LENGTH_LONG).show();
-        NavigatorUtility.getInstance(this).switchToHomePage();
     }
 
     @Override

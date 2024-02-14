@@ -15,6 +15,7 @@ import com.iishanto.contactbuddy.events.UserSearchEvent;
 import com.iishanto.contactbuddy.model.Base64ImageSearchModel;
 import com.iishanto.contactbuddy.model.HttpSuccessResponse;
 import com.iishanto.contactbuddy.model.Phones;
+import com.iishanto.contactbuddy.model.SaveContactModel;
 import com.iishanto.contactbuddy.model.User;
 import com.iishanto.contactbuddy.service.http.HttpClient;
 import com.iishanto.contactbuddy.service.http.OkHttpClientImpl;
@@ -36,42 +37,49 @@ public class BasicUserService {
 
     public void searchUserByImage(Base64ImageSearchModel imageSearchModel, UserSearchEvent userSearchEvent){
         Log.i(TAG, "searchUserByImage: Searching user");
-//        List <User> dummy=new ArrayList<>();
-//        User user1=new User();
-//        user1.setId(1L);
-//        user1.setName("Lamyea Sultana");
-//        user1.setEmail("lam@gmail.com");
-//        user1.setPicture("https://lh3.googleusercontent.com/a/ACg8ocLcbHTXAMEGfu-HUxDE-fHgrhvEsHTbbl4u_bnNeF-N4zE=s96-c");
-//        Phones phones=new Phones();
-//        phones.setNumber("01638757250");
-//        user1.setPhones((new Phones[]{phones}));
-//        dummy.add(user1);
-//        if(context instanceof AppCompatActivity){
-//            ((AppCompatActivity) context).runOnUiThread(() -> {
-//                Log.i(TAG, "searchUserByImage: calling");
-//                userSearchEvent.success(dummy);
-//            });
-//        }
-        httpClient.post("/api/user/search-by-image", imageSearchModel, new HttpEvent() {
-            @Override
-            public void success(String data) {
-                try{
-                    HttpSuccessResponse httpSuccessResponse=new ObjectMapper().readValue(data,HttpSuccessResponse.class);
-                    JsonNode users =httpSuccessResponse.getData();
-                    ObjectReader objectReader=new ObjectMapper().readerFor(new TypeReference<List<User>>() {});
-                    List < User> userList=objectReader.readValue(users);
-                    if(context instanceof AppCompatActivity) ((AppCompatActivity) context).runOnUiThread(()-> userSearchEvent.success(userList));
-                    else userSearchEvent.success(userList);
-                }catch (Exception e){
-                    failure(e);
-                }
-            }
+        List <User> dummy=new ArrayList<>();
+        User user1=new User();
+        user1.setId(1L);
+        user1.setName("Lamyea Sultana");
+        user1.setEmail("lam@gmail.com");
+        user1.setPicture("https://lh3.googleusercontent.com/a/ACg8ocLcbHTXAMEGfu-HUxDE-fHgrhvEsHTbbl4u_bnNeF-N4zE=s96-c");
+        Phones phones=new Phones();
+        phones.setNumber("01638757250");
+        phones.setId(1L);
+        user1.setPhones((new Phones[]{phones}));
+        dummy.add(user1);
+        if(context instanceof AppCompatActivity){
+            ((AppCompatActivity) context).runOnUiThread(() -> {
+                Log.i(TAG, "searchUserByImage: calling");
+                userSearchEvent.success(dummy);
+            });
+        }
+//        httpClient.post("/api/user/search-by-image", imageSearchModel, new HttpEvent() {
+//            @Override
+//            public void success(String data) {
+//                try{
+//                    HttpSuccessResponse httpSuccessResponse=new ObjectMapper().readValue(data,HttpSuccessResponse.class);
+//                    JsonNode users =httpSuccessResponse.getData();
+//                    ObjectReader objectReader=new ObjectMapper().readerFor(new TypeReference<List<User>>() {});
+//                    List < User> userList=objectReader.readValue(users);
+//                    if(context instanceof AppCompatActivity) ((AppCompatActivity) context).runOnUiThread(()-> userSearchEvent.success(userList));
+//                    else userSearchEvent.success(userList);
+//                }catch (Exception e){
+//                    failure(e);
+//                }
+//            }
+//
+//            @Override
+//            public void failure(Exception e) {
+//                if(context instanceof AppCompatActivity) ((AppCompatActivity) context).runOnUiThread(()-> userSearchEvent.failure(e));
+//                else userSearchEvent.failure(e);
+//            }
+//        });
+    }
 
-            @Override
-            public void failure(Exception e) {
-                if(context instanceof AppCompatActivity) ((AppCompatActivity) context).runOnUiThread(()-> userSearchEvent.failure(e));
-                else userSearchEvent.failure(e);
-            }
-        });
+
+
+    public void getRecentContacts(HttpEvent httpEvent){
+        httpClient.get("/api/user/saved-contacts", httpEvent);
     }
 }

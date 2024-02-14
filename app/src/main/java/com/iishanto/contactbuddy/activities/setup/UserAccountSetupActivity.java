@@ -62,7 +62,6 @@ public class UserAccountSetupActivity extends AppCompatActivity implements View.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_account_setup);
         appCompatActivity =this;
-        cameraService=new CameraService(this);
         faceDetectionService=new FaceDetectionService();
         previewView=findViewById(R.id.setup_camera_preview);
         httpClient=new OkHttpClientImpl(UtilityAndConstantsProvider.baseUrl,this);
@@ -76,15 +75,17 @@ public class UserAccountSetupActivity extends AppCompatActivity implements View.
         verificationCode=findViewById(R.id.setup_verification_code);
         new PermissionManager(this).askForPermissions();
 
-        processCameraProviderListenableFuture=ProcessCameraProvider.getInstance(this);
-        processCameraProviderListenableFuture.addListener(()->{
-            try{
-                ProcessCameraProvider processCameraProvider=processCameraProviderListenableFuture.get();
-                cameraService.startCameraX(processCameraProvider,previewView,imageCapture);
-            }catch (Throwable e){
-                Log.i(TAG, "onCreate: "+e.getLocalizedMessage());
-            }
-        }, getExecutor());
+        try{
+            processCameraProviderListenableFuture=ProcessCameraProvider.getInstance(this);
+            ProcessCameraProvider processCameraProvider=processCameraProviderListenableFuture.get();
+            cameraService=new CameraService(this,processCameraProvider);
+            processCameraProviderListenableFuture.addListener(()->{
+                cameraService.startCameraX(previewView,imageCapture);
+            }, getExecutor());
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
         httpClient.get("/api", new HttpEvent() {
             @Override
             public void success(String data) {
