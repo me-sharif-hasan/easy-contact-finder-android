@@ -23,6 +23,7 @@ public class OkHttpInterceptors {
                 Request newRequest=currentRequest.newBuilder().header("Authorization", HttpClient.getAuthorizationHeader()).build();
                 return chain.proceed(newRequest);
             }catch (Exception e){
+                e.printStackTrace();
                 Log.i(TAG, "intercept: user not logged in");
                 return chain.proceed(currentRequest);
             }

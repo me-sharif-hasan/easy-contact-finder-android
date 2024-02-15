@@ -17,4 +17,7 @@
     <string name="phone_verification_field_text">Enter verification code</string>
     <string name="phone_number_field_text">Your phone number</string>
     <string name="reg_page_bg_description">A man stading with a surfer board.</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="save_contact_to_your_device_text">Save contact to your device</string>
 </resources>

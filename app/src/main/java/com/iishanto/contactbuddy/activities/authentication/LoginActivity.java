@@ -16,9 +16,10 @@ import com.iishanto.contactbuddy.activities.NavigatorUtility;
 import com.iishanto.contactbuddy.events.UserAuthEvents;
 import com.iishanto.contactbuddy.model.Phones;
 import com.iishanto.contactbuddy.model.User;
-import com.iishanto.contactbuddy.service.backendAuth.BasicAuthenticator;
-import com.iishanto.contactbuddy.service.backendAuth.credential.BackendCredential;
-import com.iishanto.contactbuddy.service.backendAuth.credential.ClassicCredential;
+import com.iishanto.contactbuddy.service.AppSecurityProvider;
+import com.iishanto.contactbuddy.service.user.backendAuth.BasicAuthenticator;
+import com.iishanto.contactbuddy.service.user.backendAuth.credential.BackendCredential;
+import com.iishanto.contactbuddy.service.user.backendAuth.credential.ClassicCredential;
 
 import java.util.Objects;
 
@@ -156,6 +157,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
         Log.i(TAG, "doLogin: User have: "+numberOfVerifiedPhones+" verified phone number");
 //        Log.i(TAG, "doLogin: Verification status: "+user.getUserVerification().getState());
+        AppSecurityProvider.getInstance().setUser(user);
         if (user.getUserVerification()==null||!Objects.equals("verified",user.getUserVerification().getState())){
             //take to user verification activity
             Log.i(TAG, "doLogin: User not verified");

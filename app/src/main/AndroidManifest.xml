@@ -8,6 +8,9 @@
 
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.WRITE_CONTACTS"/>
+    <uses-permission android:name="android.permission.READ_CONTACTS"/>
+    <uses-permission android:name="android.permission.CALL_PHONE"/>
     <uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:maxSdkVersion="28" />
@@ -23,6 +26,12 @@
         android:theme="@style/Theme.ContactBuddy"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
+        <activity
+            android:name=".activities.contactManagement.SaveContactActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.camera.CameraActivity"
+            android:exported="false" />
         <activity
             android:name=".activities.registration.UserRegistrationActivity"
             android:exported="false" />

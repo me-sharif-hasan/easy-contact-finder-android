@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="5dp"
+    android:background="@mipmap/contact_holder_bg"
+    android:layout_marginBottom="20dp"
+    android:padding="2dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout3"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:background="@mipmap/contact_bg"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <io.supercharge.shimmerlayout.ShimmerLayout
+            android:id="@+id/contact_item_profile_avatar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:layout_width="79dp"
+                android:layout_height="79dp"
+                android:layout_marginStart="4dp"
+                android:background="@color/white"
+                android:padding="4dp"
+                android:src="@mipmap/img"
+                app:shapeAppearanceOverlay="@style/roundedImageViewRounded"
+                app:strokeColor="#4D9DFF"
+                app:strokeWidth="5dp" />
+        </io.supercharge.shimmerlayout.ShimmerLayout>
+
+        <LinearLayout
+            android:id="@+id/linearLayout2"
+            android:layout_width="226dp"
+            android:layout_height="94dp"
+            android:layout_marginStart="12dp"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="@+id/contact_item_save_button"
+            app:layout_constraintStart_toEndOf="@+id/contact_item_profile_avatar"
+            app:layout_constraintTop_toTopOf="@+id/contact_item_save_button">
+
+            <TextView
+                android:id="@+id/contact_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/pacifico_regular"
+                android:text="Miss Jannatul Ferdos"
+                android:textSize="20sp"
+                tools:layout_editor_absoluteX="95dp"
+                tools:layout_editor_absoluteY="11dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
+
+                <Button
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginHorizontal="5dp"
+                    android:background="@mipmap/facebook" />
+
+                <Button
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginHorizontal="5dp"
+                    android:background="@mipmap/github" />
+
+                <Button
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginHorizontal="5dp"
+                    android:background="@mipmap/linkedin" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <ImageButton
+            android:id="@+id/contact_item_save_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#00000000"
+            android:src="@mipmap/edit_icon"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.516"
+            app:layout_constraintStart_toEndOf="@+id/linearLayout2"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <LinearLayout
+        android:id="@+id/contact_alias_holder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/constraintLayout3"
+        app:layout_constraintStart_toStartOf="@+id/constraintLayout3"
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout3">
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

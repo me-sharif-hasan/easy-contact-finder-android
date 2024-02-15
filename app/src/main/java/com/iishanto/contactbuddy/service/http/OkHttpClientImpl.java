@@ -10,6 +10,9 @@ import com.iishanto.contactbuddy.events.HttpEvent;
 import com.iishanto.contactbuddy.model.Model;
 
 import java.io.IOException;
+import java.sql.Time;
+import java.time.Duration;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -36,7 +39,7 @@ public class OkHttpClientImpl extends HttpClient{
         init();
     }
     private void init(){
-        this.okHttpClient= new OkHttpClient.Builder().addInterceptor(new OkHttpInterceptors.AuthorizationHeaderInserterInterceptor()).build();
+        this.okHttpClient= new OkHttpClient.Builder().addInterceptor(new OkHttpInterceptors.AuthorizationHeaderInserterInterceptor()).readTimeout(50, TimeUnit.SECONDS).callTimeout(100, TimeUnit.SECONDS).build();
     }
     @Override
     public void get(String url, HttpEvent httpEvent) {
@@ -75,7 +78,7 @@ public class OkHttpClientImpl extends HttpClient{
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                 Log.i(TAG, "onResponse: Got response "+response.message());
                 if(!response.isSuccessful()){
-                    onFailure(call,new IOException("Server access denied"));
+                    onFailure(call,new IOException("Server access denied. Response code: "+response.code()+", body: "+response.body().toString()));
                     return;
                 }
                 assert response.body() != null;

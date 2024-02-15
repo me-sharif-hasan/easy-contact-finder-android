@@ -3,7 +3,7 @@ package com.iishanto.contactbuddy.model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class UserVerificationModel {
+public class UserVerificationModel extends Model{
     private String code;
     private String state;
 

@@ -3,8 +3,8 @@ package com.iishanto.contactbuddy.model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Phones {
-    private String id;
+public class Phones extends Model {
+    private Long id;
     private String number;
     private String country;
     private String countryCode;
@@ -18,11 +18,11 @@ public class Phones {
         this.phoneVerification = phoneVerificationModel;
     }
 
-    public String getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

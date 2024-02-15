@@ -1,9 +1,7 @@
 package com.iishanto.contactbuddy.activities.setup;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.camera.core.CameraSelector;
 import androidx.camera.core.ImageCapture;
-import androidx.camera.core.Preview;
 import androidx.camera.lifecycle.ProcessCameraProvider;
 import androidx.camera.view.PreviewView;
 import androidx.core.content.ContextCompat;
@@ -28,7 +26,8 @@ import com.iishanto.contactbuddy.events.HttpEvent;
 import com.iishanto.contactbuddy.events.OnFaceDetected;
 import com.iishanto.contactbuddy.model.InitialSetupModel;
 import com.iishanto.contactbuddy.model.HttpSuccessResponse;
-import com.iishanto.contactbuddy.permissionManagement.CameraPermissionTaker;
+import com.iishanto.contactbuddy.permissionManagement.PermissionManager;
+import com.iishanto.contactbuddy.service.CameraService;
 import com.iishanto.contactbuddy.service.FaceDetectionService;
 import com.iishanto.contactbuddy.service.http.HttpClient;
 import com.iishanto.contactbuddy.service.http.OkHttpClientImpl;
@@ -56,6 +55,8 @@ public class UserAccountSetupActivity extends AppCompatActivity implements View.
     FaceDetectionService faceDetectionService;
     AppCompatActivity appCompatActivity;
     HttpClient httpClient;
+
+    CameraService cameraService;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,17 +73,19 @@ public class UserAccountSetupActivity extends AppCompatActivity implements View.
         initialSetupModel=new InitialSetupModel();
         circularProgressButton.setOnClickListener(this);
         verificationCode=findViewById(R.id.setup_verification_code);
-        new CameraPermissionTaker(this).askForCamera();
+        new PermissionManager(this).askForPermissions();
 
-        processCameraProviderListenableFuture=ProcessCameraProvider.getInstance(this);
-        processCameraProviderListenableFuture.addListener(()->{
-            try{
-                ProcessCameraProvider processCameraProvider=processCameraProviderListenableFuture.get();
-                startCameraX(processCameraProvider);
-            }catch (Throwable e){
-                Log.i(TAG, "onCreate: "+e.getLocalizedMessage());
-            }
-        }, getExecutor());
+        try{
+            processCameraProviderListenableFuture=ProcessCameraProvider.getInstance(this);
+            ProcessCameraProvider processCameraProvider=processCameraProviderListenableFuture.get();
+            cameraService=new CameraService(this,processCameraProvider);
+            processCameraProviderListenableFuture.addListener(()->{
+                cameraService.startCameraX(previewView,imageCapture);
+            }, getExecutor());
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
         httpClient.get("/api", new HttpEvent() {
             @Override
             public void success(String data) {
@@ -100,14 +103,7 @@ public class UserAccountSetupActivity extends AppCompatActivity implements View.
         return ContextCompat.getMainExecutor(this);
     }
 
-    private void startCameraX(ProcessCameraProvider processCameraProvider) {
-        processCameraProvider.unbindAll();
-        CameraSelector cameraSelector=new CameraSelector.Builder().requireLensFacing(CameraSelector.LENS_FACING_FRONT).build();
-        Preview preview=new Preview.Builder().build();
-        preview.setSurfaceProvider(previewView.getSurfaceProvider());
-        imageCapture = new ImageCapture.Builder().setCaptureMode(ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY).build();
-        processCameraProvider.bindToLifecycle(this,cameraSelector,preview,imageCapture);
-    }
+
 
 
     @Override
