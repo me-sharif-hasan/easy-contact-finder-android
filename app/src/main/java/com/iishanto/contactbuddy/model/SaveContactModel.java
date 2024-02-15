@@ -4,16 +4,16 @@ import java.io.Serializable;
 
 public class SaveContactModel extends Model {
     private String name;
-    private String phone;
+    private String number;
     private Phones aliasTarget;
-    private User aliasOwner;
+    private User person;
 
-    public User getAliasOwner() {
-        return aliasOwner;
+    public void setPerson(User person) {
+        this.person = person;
     }
 
-    public void setAliasOwner(User aliasOwner) {
-        this.aliasOwner = aliasOwner;
+    public User getPerson() {
+        return person;
     }
 
     public String getName() {
@@ -24,12 +24,12 @@ public class SaveContactModel extends Model {
         this.name = name;
     }
 
-    public String getPhone() {
-        return phone;
+    public void setNumber(String number) {
+        this.number = number;
     }
 
-    public void setPhone(String phone) {
-        this.phone = phone;
+    public String getNumber() {
+        return number;
     }
 
     public Phones getAliasTarget() {

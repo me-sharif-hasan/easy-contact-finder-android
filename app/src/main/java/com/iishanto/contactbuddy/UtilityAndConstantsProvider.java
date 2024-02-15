@@ -16,7 +16,7 @@ public class UtilityAndConstantsProvider {
 
     public static final String googleAuthType="google-id";
     public static final String classicAuthType="classic";
-    public static final String baseUrl="http://10.0.2.2:8080/";//"https://contact-buddy.onrender.com/";
+    public static final String baseUrl="https://contact-buddy.onrender.com/";//"http://10.0.2.2:8080/";//
 
 
     /*

@@ -1,9 +1,8 @@
-package com.iishanto.contactbuddy.activities.contactManagement.components;
+package com.iishanto.contactbuddy.activities.camera.components;
 
 import android.content.Context;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +11,6 @@ import android.widget.EditText;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.iishanto.contactbuddy.R;
 import com.iishanto.contactbuddy.model.Phones;
 import com.iishanto.contactbuddy.model.SaveContactModel;
@@ -29,13 +27,13 @@ public class ContactDynamicFormRecyclerViewAdapter extends RecyclerView.Adapter<
     List <FormGroupViewHolder> viewHolders=new ArrayList<>();
     List<SaveContactModel> initialValues=new ArrayList<>();
 
-    public ContactDynamicFormRecyclerViewAdapter(Context context,User user){
+    public ContactDynamicFormRecyclerViewAdapter(Context context,User contactUser){
         this.context=context;
-        List <Phones> phones= Arrays.asList(user.getPhones());
+        List <Phones> phones= Arrays.asList(contactUser.getPhones());
         for (Phones phone:phones){
             SaveContactModel saveContactModel=new SaveContactModel();
-            saveContactModel.setPhone(phone.getNumber());
-            saveContactModel.setName(user.getName());
+            saveContactModel.setNumber(phone.getNumber());
+            saveContactModel.setName(contactUser.getName());
             saveContactModel.setAliasTarget(phone);
             initialValues.add(saveContactModel);
         }
@@ -110,7 +108,7 @@ public class ContactDynamicFormRecyclerViewAdapter extends RecyclerView.Adapter<
 
                 @Override
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    saveContactModel.setPhone(s.toString());
+                    saveContactModel.setNumber(s.toString());
                 }
 
                 @Override
@@ -135,7 +133,7 @@ public class ContactDynamicFormRecyclerViewAdapter extends RecyclerView.Adapter<
         public void initiate(SaveContactModel saveContactModel) {
             this.saveContactModel=saveContactModel;
             setName(saveContactModel.getName());
-            setPhone(saveContactModel.getPhone());
+            setPhone(saveContactModel.getNumber());
         }
     }
 }

@@ -4,18 +4,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.accounts.AccountManager;
-import android.content.ContentProviderOperation;
-import android.content.ContentValues;
-import android.content.OperationApplicationException;
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.RemoteException;
-import android.provider.Contacts;
-import android.provider.ContactsContract;
 import android.util.Log;
-import android.util.Pair;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -25,18 +16,15 @@ import com.github.leandroborgesferreira.loadingbutton.customViews.CircularProgre
 import com.google.android.material.imageview.ShapeableImageView;
 import com.iishanto.contactbuddy.R;
 import com.iishanto.contactbuddy.activities.NavigatorUtility;
-import com.iishanto.contactbuddy.activities.contactManagement.components.ContactDynamicFormRecyclerViewAdapter;
-import com.iishanto.contactbuddy.activities.home.components.contact.ContactListRecyclerViewAdapter;
+import com.iishanto.contactbuddy.activities.camera.components.ContactDynamicFormRecyclerViewAdapter;
 import com.iishanto.contactbuddy.events.ImageLoadedEvent;
-import com.iishanto.contactbuddy.model.Phones;
+import com.iishanto.contactbuddy.model.ContactAliasModel;
 import com.iishanto.contactbuddy.model.SaveContactModel;
 import com.iishanto.contactbuddy.model.User;
 import com.iishanto.contactbuddy.permissionManagement.PermissionManager;
 import com.iishanto.contactbuddy.service.contact.ContactService;
 import com.iishanto.contactbuddy.service.image.ImageService;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -44,7 +32,7 @@ import io.supercharge.shimmerlayout.ShimmerLayout;
 
 public class SaveContactActivity extends AppCompatActivity implements View.OnClickListener {
     private final String TAG="SAVE_CONTACT_ACTIVITY";
-    User user;
+    User contactUser;
 
 //    TextView name;
     TextView email;
@@ -63,11 +51,10 @@ public class SaveContactActivity extends AppCompatActivity implements View.OnCli
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_save_contact);
-        user= (User) Objects.requireNonNull(getIntent().getExtras()).get("user");
+        contactUser = (User) Objects.requireNonNull(getIntent().getExtras()).get("user");
+        contactDynamicFormRecyclerViewAdapter=new ContactDynamicFormRecyclerViewAdapter(this, contactUser);
 
-        contactDynamicFormRecyclerViewAdapter=new ContactDynamicFormRecyclerViewAdapter(this,user);
-
-        Log.i(TAG, "onCreate: "+user.getName());
+        Log.i(TAG, "onCreate: "+ contactUser.getName());
         shimmerLayout=findViewById(R.id.contact_image_shimmer);
 //        name=findViewById(R.id.name);
 //        phoneNumber=findViewById(R.id.phone_number);
@@ -84,13 +71,13 @@ public class SaveContactActivity extends AppCompatActivity implements View.OnCli
 
     private void init(){
         //setting phone numbers
-        if(user.getPhones()!=null&&user.getPhones().length>0){
+        if(contactUser.getPhones()!=null&& contactUser.getPhones().length>0){
 //            phoneNumber.setText(user.getPhones()[0].getNumber());
         }
         //setting photo
         shimmerLayout.startShimmerAnimation();
         ShapeableImageView shapeableImageView= (ShapeableImageView) shimmerLayout.getChildAt(0);
-        imageService.urlToBitmap(user.getPicture(), new ImageLoadedEvent() {
+        imageService.urlToBitmap(contactUser.getPicture(), new ImageLoadedEvent() {
             @Override
             public void success(Bitmap bitmap) {
                 try{
@@ -122,7 +109,11 @@ public class SaveContactActivity extends AppCompatActivity implements View.OnCli
         if(v==saveButton){
             try {
                 List <SaveContactModel> numbers=contactDynamicFormRecyclerViewAdapter.getAliases();
-                contactService.saveAllContacts(numbers,bitmap);
+                ContactAliasModel contactAliasModel=new ContactAliasModel();
+                contactAliasModel.setAliases(numbers);
+                contactAliasModel.setContact(contactUser);
+                contactService.save(contactAliasModel,bitmap);
+//                contactService.saveAllContacts(numbers,bitmap);
                 Toast.makeText(this,"Contact saved",Toast.LENGTH_LONG).show();
                 NavigatorUtility.getInstance(this).switchToHomePage();
             }catch (Exception e){

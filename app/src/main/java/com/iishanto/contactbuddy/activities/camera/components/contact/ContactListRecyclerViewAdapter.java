@@ -1,4 +1,4 @@
-package com.iishanto.contactbuddy.activities.home.components.contact;
+package com.iishanto.contactbuddy.activities.camera.components.contact;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -44,7 +44,7 @@ public class ContactListRecyclerViewAdapter extends RecyclerView.Adapter<Contact
 
     @Override
     public void onBindViewHolder(@NonNull ContactViewHolder holder, int position) {
-        holder.setUser(userList.get(position));
+        holder.setContactUser(userList.get(position));
         User user=userList.get(position);
         holder.setName(user.getName());
         holder.setPicture(user.getPicture());
@@ -61,6 +61,11 @@ public class ContactListRecyclerViewAdapter extends RecyclerView.Adapter<Contact
 
     public void setUserList(List<User> userList) {
         this.userList = userList;
+        Log.i(TAG, "setUserList: Loading users");
+        for (User user :
+                userList) {
+            Log.i(TAG, "user list is: "+user.getName());
+        }
     }
 
     @Override
@@ -78,7 +83,7 @@ public class ContactListRecyclerViewAdapter extends RecyclerView.Adapter<Contact
         View view;
 
         ShimmerLayout shimmerLayout;
-        User user;
+        User contactUser;
 
         ImageButton saveButton;
 
@@ -93,17 +98,17 @@ public class ContactListRecyclerViewAdapter extends RecyclerView.Adapter<Contact
         }
 
         public void saveContact(){
-            if (user==null) {
+            if (contactUser ==null) {
                 if(context instanceof AppCompatActivity) ((AppCompatActivity) context).runOnUiThread(() -> Toast.makeText(context,"Error saving contact.",Toast.LENGTH_LONG).show());
                 return;
             }
 
             if(context instanceof AppCompatActivity){
 
-                for (Phones p:user.getPhones()){
+                for (Phones p: contactUser.getPhones()){
                     Log.i("NAVIGATOR", "onCreate vgb 1: "+p.getId());
                 }
-                NavigatorUtility.getInstance((AppCompatActivity) context).switchToNumberSavingPage(user);
+                NavigatorUtility.getInstance((AppCompatActivity) context).switchToNumberSavingPage(contactUser);
             }
         }
 
@@ -131,12 +136,12 @@ public class ContactListRecyclerViewAdapter extends RecyclerView.Adapter<Contact
             });
         }
 
-        public void setUser(User user) {
-            this.user = user;
+        public void setContactUser(User contactUser) {
+            this.contactUser = contactUser;
         }
 
-        public User getUser() {
-            return user;
+        public User getContactUser() {
+            return contactUser;
         }
     }
 }

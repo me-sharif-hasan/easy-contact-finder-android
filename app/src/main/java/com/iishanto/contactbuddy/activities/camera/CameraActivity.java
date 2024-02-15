@@ -2,7 +2,6 @@
 package com.iishanto.contactbuddy.activities.camera;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.camera.core.CameraX;
 import androidx.camera.core.ImageCapture;
 import androidx.camera.lifecycle.ProcessCameraProvider;
 import androidx.camera.view.PreviewView;
@@ -23,7 +22,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.iishanto.contactbuddy.R;
 import com.iishanto.contactbuddy.UtilityAndConstantsProvider;
-import com.iishanto.contactbuddy.activities.home.components.contact.ContactListRecyclerViewAdapter;
+import com.iishanto.contactbuddy.activities.camera.components.contact.ContactListRecyclerViewAdapter;
 import com.iishanto.contactbuddy.events.UserSearchEvent;
 import com.iishanto.contactbuddy.model.Base64ImageSearchModel;
 import com.iishanto.contactbuddy.model.User;
@@ -31,7 +30,6 @@ import com.iishanto.contactbuddy.service.CameraService;
 import com.iishanto.contactbuddy.service.user.BasicUserService;
 
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 public class CameraActivity extends AppCompatActivity implements View.OnClickListener {
     private static String TAG="CAMERA_ACTIVITY";

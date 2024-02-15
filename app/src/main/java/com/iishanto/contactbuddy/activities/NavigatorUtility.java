@@ -59,9 +59,9 @@ public class NavigatorUtility {
         appCompatActivity.finish();
     }
 
-    public void switchToNumberSavingPage(User user) {
+    public void switchToNumberSavingPage(User contactUser) {
         Intent i=new Intent(appCompatActivity, SaveContactActivity.class);
-        i.putExtra("user",user);
+        i.putExtra("user",contactUser);
         appCompatActivity.startActivity(i);
         appCompatActivity.finish();
     }

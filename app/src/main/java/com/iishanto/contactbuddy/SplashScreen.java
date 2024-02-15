@@ -11,6 +11,7 @@ import com.iishanto.contactbuddy.activities.NavigatorUtility;
 import com.iishanto.contactbuddy.events.HttpEvent;
 import com.iishanto.contactbuddy.model.LoginSuccessResponse;
 import com.iishanto.contactbuddy.model.User;
+import com.iishanto.contactbuddy.permissionManagement.PermissionManager;
 import com.iishanto.contactbuddy.service.AppSecurityProvider;
 import com.iishanto.contactbuddy.service.http.HttpClient;
 import com.iishanto.contactbuddy.service.http.OkHttpClientImpl;
@@ -26,6 +27,7 @@ public class SplashScreen extends AppCompatActivity {
         context=this;
         HttpClient httpClient=new OkHttpClientImpl(UtilityAndConstantsProvider.baseUrl,this);
         httpClient.get("api", new HttpEvent() {
+
             @Override
             public void success(String data) {
 //                User user=new ObjectMapper();

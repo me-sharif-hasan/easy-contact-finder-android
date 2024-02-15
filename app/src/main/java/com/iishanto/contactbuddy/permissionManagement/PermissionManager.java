@@ -19,7 +19,8 @@ public class PermissionManager {
             Manifest.permission.RECORD_AUDIO,
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_CONTACTS,
-            Manifest.permission.READ_CONTACTS
+            Manifest.permission.READ_CONTACTS,
+            Manifest.permission.CALL_PHONE
     };
 
     private final ActivityResultLauncher<String[]> activityResultLauncher;

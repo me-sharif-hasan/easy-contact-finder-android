@@ -6,6 +6,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
+import com.iishanto.contactbuddy.activities.home.components.contactAlias.ContactAliasViewPagerFragment;
+
 public class HomePageTabPagerAdapter extends FragmentStateAdapter {
     AppCompatActivity appCompatActivity;
     public HomePageTabPagerAdapter(@NonNull FragmentActivity fragmentActivity,AppCompatActivity appCompatActivity) {
@@ -16,7 +18,7 @@ public class HomePageTabPagerAdapter extends FragmentStateAdapter {
     @NonNull
     @Override
     public Fragment createFragment(int position) {
-        return new RecentContactsFragment(appCompatActivity);
+        return new ContactAliasViewPagerFragment(appCompatActivity,position);
     }
 
     @Override

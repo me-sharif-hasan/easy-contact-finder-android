@@ -19,9 +19,12 @@
             android:id="@+id/contact_profile_avatar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="9dp"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/home_profile_button"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
+
             <com.google.android.material.imageview.ShapeableImageView
                 android:layout_width="180dp"
                 android:layout_height="180dp"
@@ -36,22 +39,25 @@
 
 
         <io.supercharge.shimmerlayout.ShimmerLayout
+            android:id="@+id/home_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
-            android:id="@+id/home_name"
-            app:shimmer_color="@color/black"
+            android:layout_marginBottom="12dp"
             android:paddingHorizontal="2dp"
+            app:layout_constraintBottom_toTopOf="@+id/home_profile_button"
             app:layout_constraintEnd_toEndOf="@+id/home_scan_contact_button"
             app:layout_constraintHorizontal_bias="0.216"
             app:layout_constraintStart_toEndOf="@+id/contact_profile_avatar"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toTopOf="parent"
+            app:shimmer_color="@color/black">
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/pacifico_regular"
-                android:textColor="#00378A"
                 android:text="loading your information"
+                android:textColor="#00378A"
                 android:textSize="20sp" />
         </io.supercharge.shimmerlayout.ShimmerLayout>
 
@@ -59,9 +65,11 @@
             android:id="@+id/home_profile_button"
             android:layout_width="61dp"
             android:layout_height="61dp"
-            android:layout_marginTop="28dp"
+            android:layout_marginEnd="60dp"
+            android:layout_marginBottom="17dp"
             android:background="@mipmap/profile_icon"
-            app:layout_constraintBottom_toBottomOf="@+id/home_scan_contact_button"
+            app:layout_constraintBottom_toTopOf="@+id/home_logout_button"
+            app:layout_constraintEnd_toStartOf="@+id/home_logout_button"
             app:layout_constraintStart_toEndOf="@+id/contact_profile_avatar"
             app:layout_constraintTop_toBottomOf="@+id/home_name" />
 
@@ -69,40 +77,39 @@
             android:id="@+id/home_chat_button"
             android:layout_width="61dp"
             android:layout_height="61dp"
-            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="9dp"
             android:background="@mipmap/chat_button"
-            app:layout_constraintBottom_toBottomOf="@+id/contact_profile_avatar"
+            app:layout_constraintBottom_toBottomOf="@+id/home_logout_button"
+            app:layout_constraintEnd_toEndOf="@+id/home_profile_button"
             app:layout_constraintStart_toEndOf="@+id/home_profile_button"
-            app:layout_constraintTop_toBottomOf="@+id/home_profile_button"
-            app:layout_constraintVertical_bias="0.0" />
+            app:layout_constraintTop_toBottomOf="@+id/home_profile_button" />
 
         <Button
             android:id="@+id/home_logout_button"
             android:layout_width="61dp"
             android:layout_height="61dp"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginEnd="36dp"
+            android:layout_marginBottom="35dp"
             android:background="@mipmap/logout_button"
             android:hapticFeedbackEnabled="true"
-            app:layout_constraintBottom_toBottomOf="@+id/home_chat_button"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toEndOf="@+id/home_chat_button"
-            app:layout_constraintTop_toBottomOf="@+id/home_scan_contact_button"
-            app:layout_constraintVertical_bias="0.0" />
+            app:layout_constraintStart_toEndOf="@+id/home_profile_button"
+            app:layout_constraintTop_toBottomOf="@+id/home_profile_button" />
 
         <Button
             android:id="@+id/home_scan_contact_button"
-            android:layout_width="61dp"
+            android:layout_width="0dp"
             android:layout_height="61dp"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="60dp"
+            android:layout_marginBottom="61dp"
             android:background="@mipmap/scan_icon"
             android:hapticFeedbackEnabled="true"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toEndOf="@+id/home_chat_button"
-            app:layout_constraintTop_toBottomOf="@+id/home_name" />
+            app:layout_constraintBottom_toBottomOf="@+id/home_chat_button"
+            app:layout_constraintEnd_toEndOf="@+id/home_logout_button"
+            app:layout_constraintStart_toStartOf="@+id/home_logout_button"
+            app:layout_constraintTop_toTopOf="@+id/home_name" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

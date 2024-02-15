@@ -21,6 +21,7 @@ import com.iishanto.contactbuddy.activities.home.services.HomeActivityDataServic
 import com.iishanto.contactbuddy.events.ImageLoadedEvent;
 import com.iishanto.contactbuddy.events.UserLoadedEvent;
 import com.iishanto.contactbuddy.model.User;
+import com.iishanto.contactbuddy.permissionManagement.PermissionManager;
 import com.iishanto.contactbuddy.service.image.ImageService;
 
 import io.supercharge.shimmerlayout.ShimmerLayout;
@@ -54,6 +55,7 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
         imageService=new ImageService(this);
         scanButton=findViewById(R.id.home_scan_contact_button);
         scanButton.setOnClickListener(this);
+        new PermissionManager(this).askForPermissions();
         new TabLayoutMediator(tabLayout, tabViewPager, new TabLayoutMediator.TabConfigurationStrategy() {
             @Override
             public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {

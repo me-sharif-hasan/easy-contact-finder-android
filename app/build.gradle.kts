@@ -56,6 +56,7 @@ dependencies {
 
     implementation ("com.google.mlkit:face-detection:16.1.5")
     implementation("com.google.android.gms:play-services-mlkit-face-detection:17.1.0")
+    implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
 
     implementation("io.supercharge:shimmerlayout:2.1.0")
 

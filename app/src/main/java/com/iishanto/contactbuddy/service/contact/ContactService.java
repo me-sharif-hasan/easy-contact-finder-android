@@ -10,10 +10,16 @@ import android.provider.ContactsContract;
 import android.util.Log;
 import android.util.Pair;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.iishanto.contactbuddy.UtilityAndConstantsProvider;
+import com.iishanto.contactbuddy.events.AliasLoadedEvent;
 import com.iishanto.contactbuddy.events.HttpEvent;
+import com.iishanto.contactbuddy.model.ContactAliasModel;
+import com.iishanto.contactbuddy.model.HttpSuccessResponse;
 import com.iishanto.contactbuddy.model.SaveContactCollections;
 import com.iishanto.contactbuddy.model.SaveContactModel;
+import com.iishanto.contactbuddy.model.User;
 import com.iishanto.contactbuddy.service.http.HttpClient;
 import com.iishanto.contactbuddy.service.http.OkHttpClientImpl;
 
@@ -39,7 +45,7 @@ public class ContactService {
         List <SaveContactModel> contact=new ArrayList<>();
         SaveContactModel saveContactModel=new SaveContactModel();
         saveContactModel.setName(name);
-        saveContactModel.setPhone(phone);
+        saveContactModel.setNumber(phone);
         contact.add(saveContactModel);
         saveAllContacts(contact,image);
     }
@@ -99,7 +105,7 @@ public class ContactService {
             ContentValues phoneValues = new ContentValues();
             phoneValues.put(ContactsContract.Data.RAW_CONTACT_ID, rawContactId);
             phoneValues.put(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE);
-            phoneValues.put(ContactsContract.CommonDataKinds.Phone.NUMBER, contact.getPhone());
+            phoneValues.put(ContactsContract.CommonDataKinds.Phone.NUMBER, contact.getNumber());
             resolver.insert(ContactsContract.Data.CONTENT_URI, phoneValues);// Insert photo into Data table if image is provided
             if (imageBitmap != null) {
                 System.out.println("Setting image bitmap");
@@ -110,16 +116,13 @@ public class ContactService {
                 resolver.insert(ContactsContract.Data.CONTENT_URI, photoValues);
             }
         }
-        saveToServer(numbers);
         Log.d("CONTACT", "Contact saved successfully");
     }
 
 
-    private void saveToServer(List<SaveContactModel> numbers) throws Exception{
-        SaveContactCollections saveContactCollections=new SaveContactCollections();
-        saveContactCollections.setData(numbers);
-        System.out.println("SAVING CONTACT: "+saveContactCollections.toJsonNode().toString());
-        httpClient.post("api/phone/save-alias", saveContactCollections, new HttpEvent() {
+    private void saveToServer(ContactAliasModel contactAliasModel) throws Exception{
+        System.out.println("SAVING CONTACT: "+contactAliasModel.toJsonNode().toString());
+        httpClient.post("api/phone/save-alias", contactAliasModel, new HttpEvent() {
             @Override
             public void success(String data) {
                 Log.i(TAG, "success: contact saved in backend: "+data);
@@ -128,6 +131,43 @@ public class ContactService {
             @Override
             public void failure(Exception e) {
                 e.printStackTrace();
+            }
+        });
+    }
+
+    public void save(ContactAliasModel contactAliasModel,Bitmap bitmap) throws Exception {
+        List <SaveContactModel> aliases=contactAliasModel.getAliases();
+        saveToServer(contactAliasModel);
+        saveAllContacts(aliases,bitmap);
+    }
+
+
+    public void loadAllContactAliases(AliasLoadedEvent aliasLoadedEvent){
+        httpClient.get("/api/user/saved-contacts", new HttpEvent() {
+            @Override
+            public void success(String data) {
+                try{
+                    Log.i(TAG, "success: "+data);
+                    HttpSuccessResponse httpSuccessResponse=new ObjectMapper().readValue(data, HttpSuccessResponse.class);
+                    if(httpSuccessResponse.getStatus()==null||!httpSuccessResponse.getStatus().equals("success")){
+                        failure(new Exception("Server error"));
+                        return;
+                    }
+
+                    List<SaveContactModel> aliases=new ObjectMapper().convertValue(httpSuccessResponse.getData(), new TypeReference<List<SaveContactModel>>() {});
+                    Log.i(TAG, "success: user list"+aliases.size());
+                    aliasLoadedEvent.success(aliases);
+
+                }catch (Exception e){
+                    failure(e);
+                }
+            }
+
+            @Override
+            public void failure(Exception e) {
+                Log.i(TAG, "failure: KOPASAMSU");
+                e.printStackTrace();
+                aliasLoadedEvent.failure(e);
             }
         });
     }
