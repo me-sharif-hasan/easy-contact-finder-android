@@ -11,112 +11,125 @@
         android:background="@color/white"
         android:contentDescription="@string/reg_page_bg_description" />
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/linearLayout"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="550dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginTop="97dp"
-        android:layout_marginBottom="84dp"
-        android:background="@mipmap/reg_form_bg"
-        android:paddingHorizontal="60dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:layout_editor_absoluteX="-46dp">
+        android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/textView3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="52dp"
-            android:fontFamily="@font/pacifico_regular"
-            android:text="Register your account"
-            android:textColor="@color/green"
-            android:textSize="25sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/confirm_password"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/linearLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:paddingHorizontal="5dp"
-            android:hint="Confirm your password"
-            android:background="@mipmap/reg_form_input_bg"
-            app:layout_constraintEnd_toEndOf="@+id/password"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@+id/password"
-            app:layout_constraintTop_toBottomOf="@+id/password" />
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:background="@mipmap/reg_form_input_bg"
-            android:hint="Your name"
-            android:paddingHorizontal="5dp"
-            app:layout_constraintEnd_toEndOf="@+id/textView3"
-            app:layout_constraintStart_toStartOf="@+id/textView3"
-            app:layout_constraintTop_toBottomOf="@+id/reg_error_text" />
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/email"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingHorizontal="5dp"
-            android:hint="Your email"
-            android:layout_marginTop="12dp"
-            android:background="@mipmap/reg_form_input_bg"
-            app:layout_constraintEnd_toEndOf="@+id/name"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@+id/name"
-            app:layout_constraintTop_toBottomOf="@+id/name" />
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/password"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Enter your password"
-            android:paddingHorizontal="5dp"
-            android:layout_marginTop="12dp"
-            android:background="@mipmap/reg_form_input_bg"
-            app:layout_constraintEnd_toEndOf="@+id/email"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@+id/email"
-            app:layout_constraintTop_toBottomOf="@+id/email" />
-
-        <com.github.leandroborgesferreira.loadingbutton.customViews.CircularProgressButton
-            android:id="@+id/reg_register"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Registration"
-            app:initialCornerAngle="100dp"
+            android:layout_marginTop="97dp"
+            android:paddingBottom="60dp"
+            android:layout_marginBottom="84dp"
+            android:background="@mipmap/reg_form_bg"
+            android:paddingHorizontal="60dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@+id/confirm_password"
-            app:layout_constraintStart_toStartOf="@+id/confirm_password"
-            app:layout_constraintTop_toBottomOf="@+id/confirm_password"
-            app:layout_constraintVertical_bias="0.297" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:layout_editor_absoluteX="-46dp">
 
-        <TextView
-            android:id="@+id/reg_error_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:fontFamily="sans-serif"
-            android:shadowColor="#810000"
-            android:text="Error Message"
-            android:textColor="#DA6161"
-            android:textColorHighlight="#FF0000"
-            android:textColorHint="#FF7676"
-            android:textColorLink="#BC6B6B"
-            android:visibility="invisible"
-            app:layout_constraintEnd_toEndOf="@+id/textView3"
-            app:layout_constraintHorizontal_bias="0.497"
-            app:layout_constraintStart_toStartOf="@+id/textView3"
-            app:layout_constraintTop_toBottomOf="@+id/textView3" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="52dp"
+                android:fontFamily="@font/pacifico_regular"
+                android:text="Register your account"
+                android:textColor="@color/green"
+                android:textSize="25sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/confirm_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:background="@mipmap/reg_form_input_bg"
+                android:hint="Confirm your password"
+                android:inputType="textPassword"
+                android:paddingHorizontal="5dp"
+                app:layout_constraintEnd_toEndOf="@+id/password"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="@+id/password"
+                app:layout_constraintTop_toBottomOf="@+id/password" />
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:background="@mipmap/reg_form_input_bg"
+                android:hint="Your name"
+                android:inputType="textPersonName"
+                android:paddingHorizontal="5dp"
+                android:typeface="sans"
+                app:layout_constraintEnd_toEndOf="@+id/textView3"
+                app:layout_constraintStart_toStartOf="@+id/textView3"
+                app:layout_constraintTop_toBottomOf="@+id/reg_error_text" />
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:background="@mipmap/reg_form_input_bg"
+                android:hint="Your email"
+                android:inputType="textEmailAddress"
+                android:paddingHorizontal="5dp"
+                android:typeface="sans"
+                app:layout_constraintEnd_toEndOf="@+id/name"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="@+id/name"
+                app:layout_constraintTop_toBottomOf="@+id/name" />
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:background="@mipmap/reg_form_input_bg"
+                android:hint="Enter your password"
+                android:inputType="textPassword"
+                android:paddingHorizontal="5dp"
+                app:layout_constraintEnd_toEndOf="@+id/email"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="@+id/email"
+                app:layout_constraintTop_toBottomOf="@+id/email" />
+
+            <com.github.leandroborgesferreira.loadingbutton.customViews.CircularProgressButton
+                android:id="@+id/reg_register"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Registration"
+                app:initialCornerAngle="100dp"
+                android:layout_marginTop="20dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/confirm_password"
+                app:layout_constraintStart_toStartOf="@+id/confirm_password"
+                app:layout_constraintTop_toBottomOf="@+id/confirm_password"
+                app:layout_constraintVertical_bias="0.297" />
+
+            <TextView
+                android:id="@+id/reg_error_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:fontFamily="sans-serif"
+                android:shadowColor="#810000"
+                android:text="Error Message"
+                android:textColor="#DA6161"
+                android:textColorHighlight="#FF0000"
+                android:textColorHint="#FF7676"
+                android:textColorLink="#BC6B6B"
+                android:visibility="invisible"
+                app:layout_constraintEnd_toEndOf="@+id/textView3"
+                app:layout_constraintHorizontal_bias="0.497"
+                app:layout_constraintStart_toStartOf="@+id/textView3"
+                app:layout_constraintTop_toBottomOf="@+id/textView3" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+
 </RelativeLayout>

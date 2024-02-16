@@ -1,6 +1,7 @@
 package com.iishanto.contactbuddy.service.user;
 
 import android.content.Context;
+import android.security.keystore.UserNotAuthenticatedException;
 import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -10,13 +11,16 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
 import com.iishanto.contactbuddy.UtilityAndConstantsProvider;
+import com.iishanto.contactbuddy.activities.NavigatorUtility;
 import com.iishanto.contactbuddy.events.HttpEvent;
+import com.iishanto.contactbuddy.events.UserLoadedEvent;
 import com.iishanto.contactbuddy.events.UserSearchEvent;
 import com.iishanto.contactbuddy.model.Base64ImageSearchModel;
 import com.iishanto.contactbuddy.model.HttpSuccessResponse;
 import com.iishanto.contactbuddy.model.Phones;
 import com.iishanto.contactbuddy.model.SaveContactModel;
 import com.iishanto.contactbuddy.model.User;
+import com.iishanto.contactbuddy.service.AppSecurityProvider;
 import com.iishanto.contactbuddy.service.http.HttpClient;
 import com.iishanto.contactbuddy.service.http.OkHttpClientImpl;
 
@@ -78,8 +82,41 @@ public class BasicUserService {
     }
 
 
+    public void getUserInfo(UserLoadedEvent userLoadedEvent){
+        httpClient.get("/api/user", new HttpEvent() {
+            @Override
+            public void success(String data) {
+                try{
+                    HttpSuccessResponse httpSuccessResponse=new ObjectMapper().readValue(data,HttpSuccessResponse.class);
+                    if(httpSuccessResponse.getStatus().equals("error")) throw new UserNotAuthenticatedException("Error when getting current user");
+                    User user=new ObjectMapper().convertValue(httpSuccessResponse.getData(),User.class);
+                    if(context instanceof AppCompatActivity){
+                        ((AppCompatActivity) context).runOnUiThread(()->{userLoadedEvent.success(user);});
+                    }else {
+                        userLoadedEvent.success(user);
+                    }
+                }catch (Exception e){
+                    if(context instanceof AppCompatActivity){
+                        ((AppCompatActivity) context).runOnUiThread(()->userLoadedEvent.failure(e));
+                    }else userLoadedEvent.failure(e);
+                }
+            }
+
+            @Override
+            public void failure(Exception e) {
+                userLoadedEvent.failure(e);
+            }
+        });
+    }
+
 
     public void getRecentContacts(HttpEvent httpEvent){
         httpClient.get("/api/user/saved-contacts", httpEvent);
+    }
+
+    public void logout() {
+        AppSecurityProvider.getInstance().setSecurityToken(null,context);
+        AppSecurityProvider.getInstance().setUser(null);
+        if(context instanceof AppCompatActivity) NavigatorUtility.getInstance((AppCompatActivity) context).switchToLoginPage();
     }
 }

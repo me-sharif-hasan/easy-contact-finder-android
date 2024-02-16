@@ -16,12 +16,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.github.leandroborgesferreira.loadingbutton.customViews.CircularProgressButton;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.iishanto.contactbuddy.R;
 import com.iishanto.contactbuddy.UtilityAndConstantsProvider;
+import com.iishanto.contactbuddy.activities.NavigatorUtility;
 import com.iishanto.contactbuddy.activities.camera.components.contact.ContactListRecyclerViewAdapter;
 import com.iishanto.contactbuddy.events.UserSearchEvent;
 import com.iishanto.contactbuddy.model.Base64ImageSearchModel;
@@ -76,7 +78,13 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
             ProcessCameraProvider processCameraProvider=processCameraProviderListenableFuture.get();
             cameraService=new CameraService(this,processCameraProvider);
             processCameraProviderListenableFuture.addListener(()->{
-                cameraService.startCameraX(previewView,imageCapture,true);
+                try {
+                    cameraService.startCameraX(previewView,imageCapture,true);
+                } catch (Exception e) {
+                    Toast.makeText(CameraActivity.this,"Unable to start camera", Toast.LENGTH_LONG).show();
+                    e.printStackTrace();
+                    NavigatorUtility.getInstance(CameraActivity.this).switchToHomePage();
+                }
             }, ContextCompat.getMainExecutor(this));
         }catch (Exception e){
             e.printStackTrace();

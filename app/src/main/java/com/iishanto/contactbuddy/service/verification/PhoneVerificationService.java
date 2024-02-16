@@ -25,11 +25,11 @@ public class PhoneVerificationService {
     public void sendVerificationCode(HttpEvent httpEvent){
         phoneVerificationModel=new PhoneVerificationModel();
         phoneVerificationModel.setPhone(phoneNumber);
-        httpClient.post("/api/phone/send-verification-code", phoneVerificationModel, httpEvent);
+        httpClient.post("/api/verification/send-verification-code", phoneVerificationModel, httpEvent);
     }
 
     public void verify(String code,HttpEvent httpEvent){
         phoneVerificationModel.setCode(code);
-        httpClient.post("/api/phone/verify",phoneVerificationModel,httpEvent);
+        httpClient.post("/api/verification/verify",phoneVerificationModel,httpEvent);
     }
 }

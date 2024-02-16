@@ -23,6 +23,7 @@ import com.iishanto.contactbuddy.events.UserLoadedEvent;
 import com.iishanto.contactbuddy.model.User;
 import com.iishanto.contactbuddy.permissionManagement.PermissionManager;
 import com.iishanto.contactbuddy.service.image.ImageService;
+import com.iishanto.contactbuddy.service.user.BasicUserService;
 
 import io.supercharge.shimmerlayout.ShimmerLayout;
 
@@ -36,9 +37,10 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
     ShimmerLayout profilePicture;
     ShimmerLayout name;
     ImageService imageService;
+    Button logoutButton;
 
     Button scanButton;
-
+    BasicUserService userService;
     private final String TAG="HOME_PAGE_ACTIVITY";
 
     @Override
@@ -54,6 +56,9 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
         name=findViewById(R.id.home_name);
         imageService=new ImageService(this);
         scanButton=findViewById(R.id.home_scan_contact_button);
+        logoutButton=findViewById(R.id.home_logout_button);
+        userService=new BasicUserService(this);
+        logoutButton.setOnClickListener(this);
         scanButton.setOnClickListener(this);
         new PermissionManager(this).askForPermissions();
         new TabLayoutMediator(tabLayout, tabViewPager, new TabLayoutMediator.TabConfigurationStrategy() {
@@ -76,7 +81,7 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
     private void loadUserData(){
         name.startShimmerAnimation();
         profilePicture.startShimmerAnimation();
-        dataService.getUserInfo(new UserLoadedEvent() {
+        userService.getUserInfo(new UserLoadedEvent() {
             @Override
             public void success(User user) {
                 Log.i(TAG, "success: "+user.toJsonNode().toString());
@@ -114,6 +119,8 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
     public void onClick(View v) {
         if(v==scanButton){
             NavigatorUtility.getInstance(this).switchToContactFinderWithScanPage();
+        }else if(v==logoutButton){
+            userService.logout();
         }
     }
 }

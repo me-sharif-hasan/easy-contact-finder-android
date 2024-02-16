@@ -35,7 +35,12 @@ public class SplashScreen extends AppCompatActivity {
                     Log.i(TAG, "success: "+data);
                     LoginSuccessResponse loginSuccessResponse=new ObjectMapper().readValue(data,LoginSuccessResponse.class);
                     AppSecurityProvider.getInstance().setUser(loginSuccessResponse.getData());
-                    NavigatorUtility.getInstance(context).switchToHomePage();
+                    if(AppSecurityProvider.getInstance().getUser()==null) throw new Exception("Invalid user");
+                    Log.i(TAG, "success: "+AppSecurityProvider.getInstance().getUser().getIsPhotoVerified());
+                    if (AppSecurityProvider.getInstance().getUser().getIsPhotoVerified())
+                        NavigatorUtility.getInstance(context).switchToHomePage();
+                    else
+                        NavigatorUtility.getInstance(context).switchToSetupPage();
                 }catch (Exception e){
                     failure(e);
                 }

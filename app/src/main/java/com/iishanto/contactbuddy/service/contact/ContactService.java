@@ -155,9 +155,9 @@ public class ContactService {
                     }
 
                     List<SaveContactModel> aliases=new ObjectMapper().convertValue(httpSuccessResponse.getData(), new TypeReference<List<SaveContactModel>>() {});
-                    Log.i(TAG, "success: user list"+aliases.size());
-                    aliasLoadedEvent.success(aliases);
-
+                    Log.i(TAG, "success: user list "+aliases.size());
+                    if(aliases.size()>0) aliasLoadedEvent.success(aliases);
+                    else failure(new Exception("No aliases found!"));
                 }catch (Exception e){
                     failure(e);
                 }

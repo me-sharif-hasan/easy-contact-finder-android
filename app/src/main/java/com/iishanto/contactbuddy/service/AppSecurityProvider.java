@@ -31,7 +31,6 @@ public class AppSecurityProvider {
     }
 
     public void setUser(User user) {
-        Log.i(TAG, "setUser: setting the user."+user.getName());
         this.user = user;
     }
 

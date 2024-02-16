@@ -161,7 +161,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         if (user.getUserVerification()==null||!Objects.equals("verified",user.getUserVerification().getState())){
             //take to user verification activity
             Log.i(TAG, "doLogin: User not verified");
-        }else if(numberOfVerifiedPhones==0||!user.getIsPhotoVerified()){
+        }else if(numberOfVerifiedPhones == 0 || user.getIsPhotoVerified()==null || !user.getIsPhotoVerified()){
             //user is newly registered
             NavigatorUtility.getInstance(this).switchToSetupPage();
         }else{

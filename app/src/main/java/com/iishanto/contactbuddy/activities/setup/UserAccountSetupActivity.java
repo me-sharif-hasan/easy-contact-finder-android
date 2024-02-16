@@ -11,13 +11,16 @@ import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.leandroborgesferreira.loadingbutton.customViews.CircularProgressButton;
+import com.github.leandroborgesferreira.loadingbutton.customViews.OnAnimationEndListener;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.iishanto.contactbuddy.UtilityAndConstantsProvider;
 import com.iishanto.contactbuddy.R;
@@ -31,11 +34,15 @@ import com.iishanto.contactbuddy.service.CameraService;
 import com.iishanto.contactbuddy.service.FaceDetectionService;
 import com.iishanto.contactbuddy.service.http.HttpClient;
 import com.iishanto.contactbuddy.service.http.OkHttpClientImpl;
+import com.iishanto.contactbuddy.service.user.BasicUserService;
 import com.iishanto.contactbuddy.service.verification.PhoneVerificationService;
 
 import java.io.ByteArrayOutputStream;
 import java.util.Objects;
 import java.util.concurrent.Executor;
+
+import kotlin.Unit;
+import kotlin.jvm.functions.Function0;
 
 public class UserAccountSetupActivity extends AppCompatActivity implements View.OnClickListener {
     private static String TAG="USER_ACCOUNT_SETUP_ACTIVITY";
@@ -57,6 +64,8 @@ public class UserAccountSetupActivity extends AppCompatActivity implements View.
     HttpClient httpClient;
 
     CameraService cameraService;
+    Button logoutBtn;
+    BasicUserService basicUserService;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,6 +81,9 @@ public class UserAccountSetupActivity extends AppCompatActivity implements View.
         facePreview=findViewById(R.id.setup_face_preview);
         initialSetupModel=new InitialSetupModel();
         circularProgressButton.setOnClickListener(this);
+        logoutBtn=findViewById(R.id.setup_logout_btn);
+        basicUserService=new BasicUserService(this);
+        logoutBtn.setOnClickListener(this);
         verificationCode=findViewById(R.id.setup_verification_code);
         new PermissionManager(this).askForPermissions();
 
@@ -80,7 +92,13 @@ public class UserAccountSetupActivity extends AppCompatActivity implements View.
             ProcessCameraProvider processCameraProvider=processCameraProviderListenableFuture.get();
             cameraService=new CameraService(this,processCameraProvider);
             processCameraProviderListenableFuture.addListener(()->{
-                cameraService.startCameraX(previewView,imageCapture);
+                try {
+                    cameraService.startCameraX(previewView,imageCapture);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    NavigatorUtility.getInstance(UserAccountSetupActivity.this).switchToLoginPage();
+                    Toast.makeText(UserAccountSetupActivity.this,"Unable to start verification. Camera failure!", Toast.LENGTH_LONG).show();
+                }
             }, getExecutor());
         }catch (Exception e){
             e.printStackTrace();
@@ -128,6 +146,10 @@ public class UserAccountSetupActivity extends AppCompatActivity implements View.
                     initialSetupModel.setBase64Image(base64Image);
                     takePhoneInput();
                     circularProgressButton.revertAnimation();
+                    circularProgressButton.revertAnimation(() -> {
+                        circularProgressButton.setText("Get code");
+                        return null;
+                    });
                 }
 
                 @Override
@@ -136,6 +158,9 @@ public class UserAccountSetupActivity extends AppCompatActivity implements View.
                     showError("Face detection failed");
                 }
             });
+        }
+        else if (v==logoutBtn){
+            basicUserService.logout();
         }
     }
 
@@ -150,8 +175,12 @@ public class UserAccountSetupActivity extends AppCompatActivity implements View.
             phoneVerificationService.sendVerificationCode(new HttpEvent() {
                 @Override
                 public void success(String data) {
+                    Log.i(TAG, "success: "+data);
                     runOnUiThread(() -> {
-                        circularProgressButton.revertAnimation();
+                        circularProgressButton.revertAnimation(()->{
+                            circularProgressButton.setText("Verify");
+                            return null;
+                        });
                         verificationCode.setVisibility(View.VISIBLE);
                         verificationCode.setEnabled(true);
                         circularProgressButton.setOnClickListener(v1 -> verifyCode(phoneVerificationService));
@@ -174,6 +203,7 @@ public class UserAccountSetupActivity extends AppCompatActivity implements View.
             @Override
             public void success(String data) {
                 try{
+                    Log.i(TAG, "success: "+data);
                     HttpSuccessResponse httpSuccessResponse =new ObjectMapper().readValue(data, HttpSuccessResponse.class);
                     if(Objects.equals(httpSuccessResponse.getStatus(), "error")) throw new Exception("Verification failure");
                     httpClient.post("/api/user/save-info", initialSetupModel, new HttpEvent() {

@@ -18,6 +18,7 @@ public class User extends Model {
     private Float score;
 
     public Boolean getIsPhotoVerified() {
+        if(isPhotoVerified==null) isPhotoVerified=false;
         return isPhotoVerified;
     }
 
