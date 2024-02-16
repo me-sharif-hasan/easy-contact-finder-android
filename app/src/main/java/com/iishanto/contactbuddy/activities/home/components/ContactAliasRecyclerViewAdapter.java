@@ -3,6 +3,7 @@ package com.iishanto.contactbuddy.activities.home.components;
 import static androidx.core.content.ContextCompat.startActivity;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,9 +18,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.imageview.ShapeableImageView;
 import com.iishanto.contactbuddy.R;
+import com.iishanto.contactbuddy.events.ImageLoadedEvent;
 import com.iishanto.contactbuddy.model.SaveContactModel;
 import com.iishanto.contactbuddy.model.User;
 import com.iishanto.contactbuddy.permissionManagement.PermissionManager;
+import com.iishanto.contactbuddy.service.image.ImageService;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -93,10 +96,12 @@ public class ContactAliasRecyclerViewAdapter extends RecyclerView.Adapter<Contac
 
         TextView name;
         ShimmerLayout dp;
+        ImageService imageService;
         public AliasHolder(@NonNull View itemView,AppCompatActivity appCompatActivity) {
             super(itemView);
             root=itemView;
             name=root.findViewById(R.id.contact_name);
+            imageService=new ImageService(appCompatActivity);
             dp=root.findViewById(R.id.contact_item_profile_avatar);
             contactHolder=itemView.findViewById(R.id.contact_alias_holder);
             this.appCompatActivity=appCompatActivity;
@@ -126,6 +131,18 @@ public class ContactAliasRecyclerViewAdapter extends RecyclerView.Adapter<Contac
         public void setPerson(User person) {
             Log.i(TAG, "setPerson: setting up the person. "+person.getName());
             name.setText(person.getName());
+            ShapeableImageView pic= (ShapeableImageView) dp.getChildAt(0);
+            imageService.urlToBitmap(person.getPicture(), new ImageLoadedEvent() {
+                @Override
+                public void success(Bitmap bitmap) {
+                    pic.setImageBitmap(bitmap);
+                }
+
+                @Override
+                public void failure(Exception e) {
+
+                }
+            });
         }
 
         public void setAliases(List<SaveContactModel> aliases) {
