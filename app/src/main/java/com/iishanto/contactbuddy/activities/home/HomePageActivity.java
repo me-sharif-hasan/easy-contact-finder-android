@@ -1,29 +1,47 @@
 package com.iishanto.contactbuddy.activities.home;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.github.leandroborgesferreira.loadingbutton.customViews.CircularProgressButton;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.iishanto.contactbuddy.R;
+import com.iishanto.contactbuddy.UtilityAndConstantsProvider;
 import com.iishanto.contactbuddy.activities.NavigatorUtility;
 import com.iishanto.contactbuddy.activities.home.components.HomePageTabPagerAdapter;
 import com.iishanto.contactbuddy.activities.home.services.HomeActivityDataService;
+import com.iishanto.contactbuddy.events.HttpEvent;
 import com.iishanto.contactbuddy.events.ImageLoadedEvent;
 import com.iishanto.contactbuddy.events.UserLoadedEvent;
+import com.iishanto.contactbuddy.model.ProfilePictureUploadModel;
 import com.iishanto.contactbuddy.model.User;
 import com.iishanto.contactbuddy.permissionManagement.PermissionManager;
 import com.iishanto.contactbuddy.service.image.ImageService;
+import com.iishanto.contactbuddy.service.storage.FileService;
 import com.iishanto.contactbuddy.service.user.BasicUserService;
+
+import java.io.InputStream;
+import java.time.Duration;
 
 import io.supercharge.shimmerlayout.ShimmerLayout;
 
@@ -41,6 +59,20 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
 
     Button scanButton;
     BasicUserService userService;
+    CircularProgressButton uploadImageButton;
+    ProgressBar progressBar;
+    FileService fileService=new FileService();
+
+    ActivityResultLauncher<Intent> activityResultLauncher=
+            registerForActivityResult(
+                    new ActivityResultContracts.StartActivityForResult(),
+                    new ActivityResultCallback<ActivityResult>() {
+                        @Override
+                        public void onActivityResult(ActivityResult o) {
+                            uploadProfilePicture(o);
+                        }
+                    }
+            );
     private final String TAG="HOME_PAGE_ACTIVITY";
 
     @Override
@@ -53,6 +85,7 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
         tabViewPager.setCurrentItem(0);
         dataService=new HomeActivityDataService(this);
         profilePicture=findViewById(R.id.contact_profile_avatar);
+        uploadImageButton=findViewById(R.id.upload_new_photo_button);
         name=findViewById(R.id.home_name);
         imageService=new ImageService(this);
         scanButton=findViewById(R.id.home_scan_contact_button);
@@ -60,6 +93,9 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
         userService=new BasicUserService(this);
         logoutButton.setOnClickListener(this);
         scanButton.setOnClickListener(this);
+        uploadImageButton.setOnClickListener(this);
+        progressBar=findViewById(R.id.dp_uploading_profile_picture);
+        progressBar.setVisibility(View.INVISIBLE);
         new PermissionManager(this).askForPermissions();
         new TabLayoutMediator(tabLayout, tabViewPager, new TabLayoutMediator.TabConfigurationStrategy() {
             @Override
@@ -121,6 +157,44 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
             NavigatorUtility.getInstance(this).switchToContactFinderWithScanPage();
         }else if(v==logoutButton){
             userService.logout();
+        }else if(v==uploadImageButton){
+            Intent i=new Intent();
+            i.setType("image/*");
+            i.setAction(Intent.ACTION_GET_CONTENT);
+            activityResultLauncher.launch(i);
+        }
+    }
+
+    private void uploadProfilePicture(ActivityResult o){
+        Log.i(TAG+" UPLOAD OKAY", String.valueOf(Activity.RESULT_OK));
+        if(o.getResultCode()== Activity.RESULT_OK){
+            try {
+                Uri photoUri=o.getData().getData();
+                final InputStream imageStream = getContentResolver().openInputStream(photoUri);
+                final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
+                progressBar.setVisibility(View.VISIBLE);
+                userService.uploadProfilePicture(selectedImage,new HttpEvent() {
+                    @Override
+                    public void success(String data) {
+                        runOnUiThread(()->{
+                            progressBar.setVisibility(View.INVISIBLE);
+                            ImageView imageView= (ImageView) profilePicture.getChildAt(0);
+                            imageView.setImageBitmap(selectedImage);
+                            Toast.makeText(getApplicationContext(),"Profile picture updated successfully",Toast.LENGTH_LONG).show();
+                        });
+                    }
+
+                    @Override
+                    public void failure(Exception e) {
+                        runOnUiThread(()->{
+                            Toast.makeText(getApplicationContext(),"Profile picture can not be updated",Toast.LENGTH_LONG).show();
+                            progressBar.setVisibility(View.INVISIBLE);
+                        });
+                    }
+                });
+            }catch (Exception e){
+
+            }
         }
     }
 }

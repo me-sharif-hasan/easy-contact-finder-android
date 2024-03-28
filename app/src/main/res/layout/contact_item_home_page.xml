@@ -52,9 +52,10 @@
                 android:id="@+id/contact_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/pacifico_regular"
+                android:fontFamily="@font/comfortaa"
                 android:text="Miss Jannatul Ferdos"
-                android:textSize="20sp"
+                android:textSize="19sp"
+                android:textStyle="bold"
                 tools:layout_editor_absoluteX="95dp"
                 tools:layout_editor_absoluteY="11dp" />
 

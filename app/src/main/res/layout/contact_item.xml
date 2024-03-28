@@ -39,9 +39,11 @@
             android:id="@+id/contact_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/pacifico_regular"
-            android:text="Miss Jannatul Ferdos"
+            android:fontFamily="@font/comfortaa"
+            android:text="@string/alias_dummy_name_text"
+            android:textIsSelectable="true"
             android:textSize="20sp"
+            android:textStyle="bold"
             tools:layout_editor_absoluteX="95dp"
             tools:layout_editor_absoluteY="11dp" />
 
@@ -50,9 +52,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:height="25dp"
-            android:fontFamily="@font/akaya_talivigala"
+            android:fontFamily="@font/comfortaa"
             android:lineHeight="2dp"
-            android:text="Rajapur, Pabna"
+            android:text="@string/default_address_text"
             android:textSize="17sp"
             tools:layout_editor_absoluteX="95dp"
             tools:layout_editor_absoluteY="11dp" />
@@ -61,9 +63,9 @@
             android:id="@+id/contact_state"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/akaya_talivigala"
+            android:fontFamily="@font/comfortaa"
             android:lineHeight="2dp"
-            android:text="Rajapur, Banladesh"
+            android:text="@string/address_dummy_text"
             android:textSize="20sp"
             tools:layout_editor_absoluteX="95dp"
             tools:layout_editor_absoluteY="11dp" />

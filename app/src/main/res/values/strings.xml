@@ -20,4 +20,7 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="save_contact_to_your_device_text">Save contact to your device</string>
+    <string name="alias_dummy_name_text">Miss Jannatul Ferdos</string>
+    <string name="default_address_text">Rajapur, Pabna</string>
+    <string name="address_dummy_text">Rajapur, Banladesh</string>
 </resources>

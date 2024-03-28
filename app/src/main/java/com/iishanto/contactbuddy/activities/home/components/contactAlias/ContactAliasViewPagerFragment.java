@@ -39,6 +39,7 @@ public class ContactAliasViewPagerFragment extends Fragment {
     HttpClient httpClient;
     SwipeRefreshLayout swipeRefreshLayout;
     int tab=0;
+    public ContactAliasViewPagerFragment(){}
     public ContactAliasViewPagerFragment(AppCompatActivity appCompatActivity, int position){
         this.appCompatActivity=appCompatActivity;
         tab=position;

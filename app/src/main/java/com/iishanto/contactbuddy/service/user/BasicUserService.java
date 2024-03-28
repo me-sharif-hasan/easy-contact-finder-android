@@ -1,6 +1,8 @@
 package com.iishanto.contactbuddy.service.user;
 
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.security.keystore.UserNotAuthenticatedException;
 import android.util.Log;
 
@@ -18,6 +20,7 @@ import com.iishanto.contactbuddy.events.UserSearchEvent;
 import com.iishanto.contactbuddy.model.Base64ImageSearchModel;
 import com.iishanto.contactbuddy.model.HttpSuccessResponse;
 import com.iishanto.contactbuddy.model.Phones;
+import com.iishanto.contactbuddy.model.ProfilePictureUploadModel;
 import com.iishanto.contactbuddy.model.SaveContactModel;
 import com.iishanto.contactbuddy.model.User;
 import com.iishanto.contactbuddy.service.AppSecurityProvider;
@@ -118,5 +121,11 @@ public class BasicUserService {
         AppSecurityProvider.getInstance().setSecurityToken(null,context);
         AppSecurityProvider.getInstance().setUser(null);
         if(context instanceof AppCompatActivity) NavigatorUtility.getInstance((AppCompatActivity) context).switchToLoginPage();
+    }
+
+    public void uploadProfilePicture(Bitmap selectedImage,HttpEvent httpEvent) {
+        String base64=UtilityAndConstantsProvider.convertBitmapToBase64(selectedImage);
+        ProfilePictureUploadModel profilePictureUploadModel=new ProfilePictureUploadModel(base64,"png");
+        httpClient.post("/api/user/update/dp", profilePictureUploadModel, httpEvent);
     }
 }
