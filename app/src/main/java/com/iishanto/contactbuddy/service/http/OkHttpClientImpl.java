@@ -27,7 +27,7 @@ public class OkHttpClientImpl extends HttpClient{
     public static final String TAG="OK_HTTP_CLIENT_IMPL";
     okhttp3.OkHttpClient okHttpClient;
     private final HttpUrl baseUrl;
-    public OkHttpClientImpl(AppCompatActivity context){
+    public OkHttpClientImpl(Context context){
         super(context);
         baseUrl=null;
         init();

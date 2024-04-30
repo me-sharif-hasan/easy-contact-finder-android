@@ -2,6 +2,7 @@ package com.iishanto.contactbuddy.activities.authentication;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -13,6 +14,7 @@ import com.github.leandroborgesferreira.loadingbutton.customViews.CircularProgre
 import com.google.android.material.textfield.TextInputEditText;
 import com.iishanto.contactbuddy.R;
 import com.iishanto.contactbuddy.activities.NavigatorUtility;
+import com.iishanto.contactbuddy.activities.help.HelpActivity;
 import com.iishanto.contactbuddy.events.UserAuthEvents;
 import com.iishanto.contactbuddy.model.Phones;
 import com.iishanto.contactbuddy.model.User;
@@ -49,7 +51,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         googleLoginButton.setOnClickListener(this);
         registrationButton=findViewById(R.id.register);
         registrationButton.setOnClickListener(this);
-
+        Button help=findViewById(R.id.app_help);
+        help.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(LoginActivity.this,HelpActivity.class);
+                startActivity(intent);
+            }
+        });
         Log.i(TAG, "onCreate: Got extra: "+getIntent().getStringExtra("message"));
         Toast.makeText(this,getIntent().getStringExtra("message"), Toast.LENGTH_LONG).show();
     }

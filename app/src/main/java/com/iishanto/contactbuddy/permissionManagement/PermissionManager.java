@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.core.content.ContextCompat;
@@ -13,33 +14,52 @@ import java.util.Map;
 
 public class PermissionManager {
 
-    private static final int CAMERA_PERMISSION_REQUEST_CODE = 100;
+    public interface PermissionCallback {
+        void onPermissionGranted();
+        void onPermissionDenied();
+    }
+
     private static final String[] REQUIRED_PERMISSIONS = {
             Manifest.permission.CAMERA,
             Manifest.permission.RECORD_AUDIO,
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_CONTACTS,
             Manifest.permission.READ_CONTACTS,
-            Manifest.permission.CALL_PHONE
+            Manifest.permission.CALL_PHONE,
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_COARSE_LOCATION
     };
 
-    private final ActivityResultLauncher<String[]> activityResultLauncher;
-    private final FragmentActivity fragmentActivity;
+    private  ActivityResultLauncher<String[]> activityResultLauncher;
+    private  FragmentActivity fragmentActivity;
+    private  PermissionCallback permissionCallback;
+    public PermissionManager(FragmentActivity fragmentActivity){
+        init(fragmentActivity,null);
+    }
+    public PermissionManager(FragmentActivity fragmentActivity,PermissionCallback permissionCallback){
+        init(fragmentActivity,permissionCallback);
+    }
 
-    public PermissionManager(FragmentActivity fragmentActivity) {
+    public void init(FragmentActivity fragmentActivity, PermissionCallback permissionCallback) {
         this.fragmentActivity = fragmentActivity;
+        this.permissionCallback = permissionCallback;
 
         this.activityResultLauncher = fragmentActivity.registerForActivityResult(
                 new ActivityResultContracts.RequestMultiplePermissions(),
-                this::handlePermissionResult
+                new ActivityResultCallback<Map<String, Boolean>>() {
+                    @Override
+                    public void onActivityResult(Map<String, Boolean> permissions) {
+                        handlePermissionResult(permissions);
+                    }
+                }
         );
     }
 
     public void askForPermissions() {
         // Check if the required permissions are granted
-        if (checkPermissions()) {
-            // Permissions are already granted, perform your logic here
-            // For example, startCamera();
+        if (checkPermissions()&&permissionCallback!=null) {
+            // Permissions are already granted, notify callback
+            permissionCallback.onPermissionGranted();
         } else {
             // Request permissions
             requestPermissions();
@@ -66,22 +86,18 @@ public class PermissionManager {
         // Handle Permission granted/rejected
         boolean permissionGranted = true;
         for (Map.Entry<String, Boolean> entry : permissions.entrySet()) {
-            if (entry.getKey() != null && entry.getKey().equals(Manifest.permission.CAMERA) && !entry.getValue()) {
+            if (!entry.getValue()) {
                 permissionGranted = false;
                 break;
             }
         }
 
-        if (!permissionGranted) {
-            // Permissions denied, show a message or handle accordingly
-            Toast.makeText(
-                    fragmentActivity,
-                    "Camera permission denied",
-                    Toast.LENGTH_SHORT
-            ).show();
-        } else {
-            // Permissions granted, perform your logic here
-            // For example, startCamera();
+        if (permissionGranted&&permissionCallback!=null) {
+            // Permissions granted, notify callback
+            permissionCallback.onPermissionGranted();
+        } else if(permissionCallback!=null) {
+            // Permissions denied, notify callback
+            permissionCallback.onPermissionDenied();
         }
     }
 

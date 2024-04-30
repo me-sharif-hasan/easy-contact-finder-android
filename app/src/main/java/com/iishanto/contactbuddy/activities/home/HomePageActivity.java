@@ -9,11 +9,19 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.app.Activity;
+import android.app.Service;
+import android.app.job.JobInfo;
+import android.app.job.JobScheduler;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Path;
+import android.location.LocationManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.text.Layout;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -37,6 +45,7 @@ import com.iishanto.contactbuddy.model.ProfilePictureUploadModel;
 import com.iishanto.contactbuddy.model.User;
 import com.iishanto.contactbuddy.permissionManagement.PermissionManager;
 import com.iishanto.contactbuddy.service.image.ImageService;
+import com.iishanto.contactbuddy.service.location.LocationUpdateService;
 import com.iishanto.contactbuddy.service.storage.FileService;
 import com.iishanto.contactbuddy.service.user.BasicUserService;
 
@@ -80,6 +89,7 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_page);
         tabViewPager=findViewById(R.id.home_view_pager);
+        tabViewPager.setUserInputEnabled(false);
         tabLayout=findViewById(R.id.home_tabs);
         tabViewPager.setAdapter(new HomePageTabPagerAdapter(this,this));
         tabViewPager.setCurrentItem(0);
@@ -96,7 +106,6 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
         uploadImageButton.setOnClickListener(this);
         progressBar=findViewById(R.id.dp_uploading_profile_picture);
         progressBar.setVisibility(View.INVISIBLE);
-        new PermissionManager(this).askForPermissions();
         new TabLayoutMediator(tabLayout, tabViewPager, new TabLayoutMediator.TabConfigurationStrategy() {
             @Override
             public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
@@ -111,6 +120,15 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
             }
         }).attach();
         loadUserData();
+
+
+        Intent i=new Intent(this,LocationUpdateService.class);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            Log.i(TAG, "onCreate: CREATING FOREGROUND SERVICE");
+            startForegroundService(i);
+        }else{
+            startService(i);
+        }
     }
 
 

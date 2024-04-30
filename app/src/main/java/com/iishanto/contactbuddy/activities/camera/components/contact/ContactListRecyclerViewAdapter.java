@@ -61,6 +61,7 @@ public class ContactListRecyclerViewAdapter extends RecyclerView.Adapter<Contact
 
     public void setUserList(List<User> userList) {
         this.userList = userList;
+        notifyDataSetChanged();
         Log.i(TAG, "setUserList: Loading users");
         for (User user :
                 userList) {

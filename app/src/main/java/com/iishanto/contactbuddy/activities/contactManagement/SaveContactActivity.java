@@ -52,6 +52,9 @@ public class SaveContactActivity extends AppCompatActivity implements View.OnCli
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_save_contact);
         contactUser = (User) Objects.requireNonNull(getIntent().getExtras()).get("user");
+        Log.i(TAG,"onCreate: ss: "+contactUser.toJsonNode().toPrettyString());
+        Log.i(TAG, "onCreate: ss: "+contactUser.getName());
+        Log.i(TAG, "onCreate: ss: "+contactUser.getPhones().length);
         contactDynamicFormRecyclerViewAdapter=new ContactDynamicFormRecyclerViewAdapter(this, contactUser);
 
         Log.i(TAG, "onCreate: "+ contactUser.getName());

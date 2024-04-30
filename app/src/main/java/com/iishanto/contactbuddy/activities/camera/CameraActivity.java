@@ -102,10 +102,12 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void searchUserByImage(final Bitmap bitmap){
+        Log.i(TAG, "searchUserByImage: Searching user");
         new Thread(() -> {
             String base64 = UtilityAndConstantsProvider.convertBitmapToBase64(bitmap);
             Base64ImageSearchModel imageSearchModel = new Base64ImageSearchModel();
-            imageSearchModel.setBase_64_encoded_string(base64);
+            imageSearchModel.setBase_64_image(base64);
+            Log.i(TAG, "searchUserByImage - image model: "+imageSearchModel.toString());
             basicUserService.searchUserByImage(imageSearchModel, new UserSearchEvent() {
                 @Override
                 public void success(List<User> userList) {
@@ -118,6 +120,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
 
                 @Override
                 public void failure(Exception e) {
+                    e.printStackTrace();
                     circularProgressButton.revertAnimation();
                 }
             });

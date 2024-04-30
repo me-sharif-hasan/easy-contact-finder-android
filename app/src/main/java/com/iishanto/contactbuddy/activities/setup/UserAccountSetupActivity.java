@@ -204,6 +204,7 @@ public class UserAccountSetupActivity extends AppCompatActivity implements View.
             public void success(String data) {
                 try{
                     Log.i(TAG, "success: "+data);
+                    System.out.println(initialSetupModel.toJsonNode().toString());
                     HttpSuccessResponse httpSuccessResponse =new ObjectMapper().readValue(data, HttpSuccessResponse.class);
                     if(Objects.equals(httpSuccessResponse.getStatus(), "error")) throw new Exception("Verification failure");
                     httpClient.post("/api/user/save-info", initialSetupModel, new HttpEvent() {

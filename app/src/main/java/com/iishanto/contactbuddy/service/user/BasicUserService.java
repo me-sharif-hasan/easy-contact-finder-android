@@ -65,6 +65,7 @@ public class BasicUserService {
             @Override
             public void success(String data) {
                 try{
+                    Log.i(TAG, "success-load: "+data);
                     HttpSuccessResponse httpSuccessResponse=new ObjectMapper().readValue(data,HttpSuccessResponse.class);
                     JsonNode users =httpSuccessResponse.getData();
                     ObjectReader objectReader=new ObjectMapper().readerFor(new TypeReference<List<User>>() {});
@@ -72,6 +73,7 @@ public class BasicUserService {
                     if(context instanceof AppCompatActivity) ((AppCompatActivity) context).runOnUiThread(()-> userSearchEvent.success(userList));
                     else userSearchEvent.success(userList);
                 }catch (Exception e){
+                    e.printStackTrace();
                     failure(e);
                 }
             }

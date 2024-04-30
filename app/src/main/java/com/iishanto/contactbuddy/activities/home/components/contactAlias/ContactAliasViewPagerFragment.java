@@ -30,7 +30,7 @@ import java.util.List;
 import io.supercharge.shimmerlayout.ShimmerLayout;
 
 public class ContactAliasViewPagerFragment extends Fragment {
-    private static String TAG="CONTACT_ALIAS_VIEW_PAGER_FRAGMENT";
+    private static final String TAG="CONTACT_ALIAS_VIEW_PAGER_FRAGMENT";
     AppCompatActivity appCompatActivity;
     RecyclerView recyclerView;
     ShimmerLayout shimmerLayout;

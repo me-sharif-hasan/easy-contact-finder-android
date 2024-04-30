@@ -25,31 +25,41 @@ public class SplashScreen extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
         context=this;
-        HttpClient httpClient=new OkHttpClientImpl(UtilityAndConstantsProvider.baseUrl,this);
-        httpClient.get("api", new HttpEvent() {
-
+        new PermissionManager(this, new PermissionManager.PermissionCallback() {
             @Override
-            public void success(String data) {
+            public void onPermissionGranted() {
+                HttpClient httpClient=new OkHttpClientImpl(UtilityAndConstantsProvider.baseUrl,SplashScreen.this);
+                httpClient.get("api", new HttpEvent() {
+
+                    @Override
+                    public void success(String data) {
 //                User user=new ObjectMapper();
-                try{
-                    Log.i(TAG, "success: "+data);
-                    LoginSuccessResponse loginSuccessResponse=new ObjectMapper().readValue(data,LoginSuccessResponse.class);
-                    AppSecurityProvider.getInstance().setUser(loginSuccessResponse.getData());
-                    if(AppSecurityProvider.getInstance().getUser()==null) throw new Exception("Invalid user");
-                    Log.i(TAG, "success: "+AppSecurityProvider.getInstance().getUser().getIsPhotoVerified());
-                    if (AppSecurityProvider.getInstance().getUser().getIsPhotoVerified())
-                        NavigatorUtility.getInstance(context).switchToHomePage();
-                    else
-                        NavigatorUtility.getInstance(context).switchToSetupPage();
-                }catch (Exception e){
-                    failure(e);
-                }
+                        try{
+                            Log.i(TAG, "success: "+data);
+                            LoginSuccessResponse loginSuccessResponse=new ObjectMapper().readValue(data,LoginSuccessResponse.class);
+                            AppSecurityProvider.getInstance().setUser(loginSuccessResponse.getData());
+                            if(AppSecurityProvider.getInstance().getUser()==null) throw new Exception("Invalid user");
+                            Log.i(TAG, "success: "+AppSecurityProvider.getInstance().getUser().getIsPhotoVerified());
+                            if (AppSecurityProvider.getInstance().getUser().getIsPhotoVerified())
+                                NavigatorUtility.getInstance(context).switchToHomePage();
+                            else
+                                NavigatorUtility.getInstance(context).switchToSetupPage();
+                        }catch (Exception e){
+                            failure(e);
+                        }
+                    }
+
+                    @Override
+                    public void failure(Exception e) {
+                        NavigatorUtility.getInstance(context).switchToLoginPage();
+                    }
+                });
             }
 
             @Override
-            public void failure(Exception e) {
-                NavigatorUtility.getInstance(context).switchToLoginPage();
+            public void onPermissionDenied() {
+
             }
-        });
+        }).askForPermissions();
     }
 }
